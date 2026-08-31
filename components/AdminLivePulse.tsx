@@ -17,7 +17,6 @@ export function AdminLivePulse() {
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M3 12h4l2.2-5.2L13 17l2.1-5H21" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
         </svg>
-        <b>LIVE</b>
       </span>
 
       <i className="ka-orbit-dot dot-a" aria-hidden="true" />
