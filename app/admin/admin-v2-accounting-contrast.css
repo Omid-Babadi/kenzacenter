@@ -1,0 +1,32 @@
+/* Clear color hierarchy for the dark accounting summary. */
+.ka-finance-hero > div:first-child > span {
+  color: #d8c3aa;
+}
+
+.ka-finance-hero > div:first-child > strong {
+  color: #f4d9ba;
+}
+
+.ka-finance-hero > div:first-child > strong small {
+  color: #d9a978;
+}
+
+.ka-finance-hero > div:first-child > b {
+  color: #8fd0aa;
+}
+
+.ka-finance-hero > div:first-child > p {
+  color: #aebbb1;
+}
+
+.ka-finance-hero article span {
+  color: #cbbba7;
+}
+
+.ka-finance-hero article strong {
+  color: #edbd8d;
+}
+
+.ka-finance-hero article small {
+  color: #9eb6a8;
+}

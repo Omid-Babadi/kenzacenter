@@ -8,6 +8,7 @@ import "./admin-mobile-fix.css";
 import "./admin-sidebar-visibility.css";
 import "./admin-slide-tab.css";
 import "./admin-v2-geometry.css";
+import "./admin-v2-accounting-contrast.css";
 
 export const metadata: Metadata = {
   title: "پنل دمو",
