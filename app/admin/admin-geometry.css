@@ -1,0 +1,79 @@
+/* Quiet geometric accents for the admin interface */
+.ad-command-hero,
+.ad-trajectory-card,
+.ad-mix-card,
+.ad-heat-card,
+.ad-report-hero { position: relative; isolation: isolate; overflow: hidden; }
+
+.ad-command-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(42vw, 590px);
+  aspect-ratio: 1;
+  top: -47%;
+  left: 35%;
+  border: 1px solid rgba(255,255,255,.13);
+  transform: rotate(45deg);
+}
+
+.ad-command-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 13px;
+  aspect-ratio: 1;
+  right: 7%;
+  top: 22%;
+  background: #e1b18c;
+  box-shadow: -44px 49px 0 rgba(255,255,255,.34), -92px 94px 0 rgba(225,177,140,.42);
+  transform: rotate(45deg);
+}
+
+.ad-command-hero > * { position: relative; z-index: 1; }
+
+.ad-trajectory-card::before,
+.ad-mix-card::before,
+.ad-heat-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(181,122,75,.16);
+  pointer-events: none;
+}
+
+.ad-trajectory-card::before { width: 130px; aspect-ratio: 1; top: -74px; left: -42px; border-radius: 50%; box-shadow: 0 0 0 23px rgba(181,122,75,.035); }
+.ad-mix-card::before { width: 112px; height: 112px; left: -62px; bottom: -61px; transform: rotate(45deg); }
+.ad-heat-card::before { width: 110px; aspect-ratio: 1; top: -63px; left: 25px; border-radius: 50%; }
+
+.ad-report-hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 220px;
+  aspect-ratio: 1;
+  bottom: -123px;
+  left: 9%;
+  border: 1px solid rgba(255,255,255,.12);
+  transform: rotate(45deg);
+}
+
+.ad-report-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 8px;
+  aspect-ratio: 1;
+  top: 30px;
+  right: 16%;
+  background: #e1b18c;
+  box-shadow: 26px 26px 0 rgba(255,255,255,.36), 52px 52px 0 rgba(225,177,140,.55);
+  transform: rotate(45deg);
+}
+
+.ad-report-hero > * { position: relative; z-index: 1; }
+
+@media (max-width: 680px) {
+  .ad-command-hero::before { width: 290px; left: 33%; top: -14%; }.ad-command-hero::after { right: 10%; top: 56%; transform: scale(.7) rotate(45deg); }
+  .ad-trajectory-card::before { width: 100px; top: -60px; left: -45px; }.ad-heat-card::before { left: auto; right: 14px; }.ad-report-hero::before { left: 22%; transform: scale(.7) rotate(45deg); }
+}

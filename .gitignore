@@ -1,0 +1,14 @@
+# dependencies and framework output
+node_modules/
+.next/
+out/
+
+# local configuration and diagnostics
+.env*
+!.env.example
+*.log
+*.tsbuildinfo
+
+# editor and OS metadata
+.DS_Store
+Thumbs.db
