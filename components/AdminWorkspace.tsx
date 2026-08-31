@@ -3,6 +3,7 @@
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import demo from "@/data/admin-demo.json";
 import { AdminIcon } from "./AdminDashboard";
+import { AdminModernCharts } from "./AdminModernCharts";
 
 export type WorkspaceId = "customers" | "projects" | "inventory" | "accounting" | "employees" | "missions" | "team";
 type PageId = "overview" | WorkspaceId;
@@ -68,13 +69,14 @@ function Overview({ navigate, notify }: { navigate: Props["onNavigate"]; notify:
   const tasks = ["تأیید پرداخت صورت‌وضعیت چهارباغ", "بررسی کمبود پروفیل کارگاه صفه", "تماس نهایی با خانواده رستگار"];
   const toggle = (task: string) => setDone((items) => items.includes(task) ? items.filter((item) => item !== task) : [...items, task]);
   return <>
-    <PageHeader eyebrow="مرکز فرماندهی امروز" title="صبح بخیر، کیارش 👋" description="وضعیت کسب‌وکار آرام است؛ دو موضوع مهم در تأمین و یک سررسید مالی برای تصمیم شما باقی مانده." action="برنامه مأموریت‌ها" icon="route" onAction={() => navigate("missions")} secondary={<button className="ka-secondary" onClick={() => notify("خلاصه مدیریتی دمو آماده شد.")}><WIcon name="download" />خروجی گزارش روزانه</button>} />
+    <PageHeader eyebrow="مرکز فرماندهی امروز" title="صبح بخیر، مهندس کیانی 👋" description="وضعیت کسب‌وکار آرام است؛ دو موضوع مهم در تأمین و یک سررسید مالی برای تصمیم شما باقی مانده." action="برنامه مأموریت‌ها" icon="route" onAction={() => navigate("missions")} secondary={<button className="ka-secondary" onClick={() => notify("خلاصه مدیریتی دمو آماده شد.")}><WIcon name="download" />خروجی گزارش روزانه</button>} />
     <section className="ka-hero-command">
       <div className="ka-hero-copy"><span>شاخص سلامت مجموعه</span><h2>۸۷<small>٪</small></h2><strong><i />۴ درصد بهتر از هفته پیش</strong><p>چهار پروژه از پنج پروژه در محدوده کنترل هستند. تنها پروژه صفه نیاز به تصمیم فنی دارد.</p><button onClick={() => navigate("projects")}>مشاهده پالس پروژه‌ها <WIcon name="arrow" /></button></div>
       <div className="ka-hero-orbit"><span className="ka-orbit one" /><span className="ka-orbit two" /><span className="ka-orbit-core"><WIcon name="activity" /><b>LIVE</b></span><i className="ka-orbit-dot dot-a" /><i className="ka-orbit-dot dot-b" /></div>
       <div className="ka-hero-side"><article><span>فرصت‌های فروش</span><strong>۲۴۶ <small>میلیارد</small></strong><b>۶ پرونده فعال</b></article><article><span>مأموریت‌های امروز</span><strong>۵ <small>برنامه</small></strong><b>۱ مورد در حال انجام</b></article><article><span>مانده قابل تخصیص</span><strong>۳۸.۴ <small>میلیارد</small></strong><b>پایدار</b></article></div>
     </section>
     <div className="ka-stat-grid"><StatCard label="مشتریان فعال" value="۴۸" note="۶ سرنخ تازه در شهریور" icon="users" trend="+۱۲٪" /><StatCard label="پروژه‌های در اجرا" value="۵" note="میانگین پیشرفت ۵۰.۴٪" icon="briefcase" tone="ink" /><StatCard label="ارزش موجودی" value="۱۸.۲ میلیارد" note="۲ قلم زیر نقطه سفارش" icon="box" tone="blue" /><StatCard label="مطالبات این ماه" value="۱۲.۸ میلیارد" note="۴.۸ میلیارد معوق" icon="wallet" tone="green" /></div>
+    <AdminModernCharts />
     <section className="ka-dashboard-grid">
       <article className="ka-card ka-project-pulse"><div className="ka-panel-head"><div><span>وضعیت زنده</span><h3>پیشرفت پروژه‌ها</h3></div><button onClick={() => navigate("projects")}>همه پروژه‌ها <WIcon name="arrow" /></button></div>{demo.projects.slice(0, 4).map((project) => <button type="button" className="ka-pulse-row" key={project.id} onClick={() => navigate("projects")}><span className={`ka-project-dot is-${project.color}`} /> <div><strong>{project.name}</strong><small>{project.phase} · {project.manager}</small><p><i style={{ width: `${project.progress}%` }} /></p></div><b>{faNumber(project.progress)}٪</b><Status>{project.status}</Status></button>)}</article>
       <article className="ka-card ka-tasks"><div className="ka-panel-head"><div><span>تمرکز امروز</span><h3>اولویت‌های شما</h3></div><b>{faNumber(done.length)}/{faNumber(tasks.length)}</b></div><div>{tasks.map((task, index) => <button type="button" className={done.includes(task) ? "is-done" : ""} onClick={() => toggle(task)} key={task}><span>{done.includes(task) ? <WIcon name="check" /> : `۰${index + 1}`}</span><div><strong>{task}</strong><small>{index === 0 ? "تا ساعت ۱۱:۳۰" : index === 1 ? "فوریت بالا" : "تا پایان امروز"}</small></div><WIcon name="chevron" /></button>)}</div><p>با کلیک روی هر مورد، آن را انجام‌شده علامت بزنید.</p></article>

@@ -98,7 +98,7 @@ export function AdminDashboard() {
           <small>داده‌ها فقط از JSON محلی</small>
         </div>
         <div className="ka-profile">
-          <span className="ka-profile-avatar">ک ک<i /></span>
+          <span className="ka-profile-avatar">م ک<i /></span>
           <div><strong>{demo.company.manager}</strong><small>{demo.company.managerRole}</small></div>
           <button type="button" aria-label="تنظیمات پروفایل">•••</button>
         </div>

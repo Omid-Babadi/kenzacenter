@@ -1,0 +1,56 @@
+/* Keep the compact mobile search control centered before it expands. */
+@media (max-width: 570px) {
+  .ka-global-search {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    grid-template-columns: 18px 0;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    gap: 0;
+    padding: 0 12px;
+    border-radius: 12px;
+  }
+
+  .ka-global-search > svg {
+    grid-column: 1;
+    grid-row: 1;
+    place-self: center;
+    width: 18px;
+    height: 18px;
+  }
+
+  .ka-global-search > input {
+    grid-column: 2;
+    grid-row: 1;
+    width: 0;
+    height: 100%;
+    padding: 0;
+  }
+
+  .ka-global-search:focus-within {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    grid-template-rows: 1fr;
+    justify-content: stretch;
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  .ka-global-search:focus-within > input {
+    grid-column: 2;
+    width: auto;
+  }
+
+  .ka-global-search:focus-within > button {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .ka-icon-button,
+  .ka-mobile-menu {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+}
