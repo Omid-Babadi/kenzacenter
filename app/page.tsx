@@ -116,7 +116,7 @@ export default function Home() {
             </blockquote>
             <div className="p-founder-person">
               <div className="p-founder-avatar">ک</div>
-              <div><strong>آقای کیانی</strong><span>بنیان‌گذار و مدیرعامل کنزا</span></div>
+              <div><strong>مهندس کیانی</strong><span>بنیان‌گذار و مدیرعامل کنزا</span></div>
             </div>
             <small className="p-founder-note">متن این پیام در نسخه فعلی پیشنهادی است.</small>
           </div>
