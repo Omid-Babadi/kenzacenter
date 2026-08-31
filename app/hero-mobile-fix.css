@@ -1,0 +1,33 @@
+/* Keep the hero copy and its CTA row in one vertical rhythm on small screens. */
+@media (max-width: 760px) {
+  .p-hero-card {
+    --hero-copy-paragraph-top: 56svh;
+    --hero-actions-gap: 124px;
+  }
+
+  .p-hero-copy p {
+    top: var(--hero-copy-paragraph-top);
+  }
+
+  .p-hero-actions {
+    top: min(calc(var(--hero-copy-paragraph-top) + var(--hero-actions-gap)), calc(100svh - 76px));
+    right: 20px;
+    left: 20px;
+    bottom: auto;
+    align-items: center;
+  }
+}
+
+@media (max-width: 760px) and (max-height: 640px) {
+  .p-hero-card {
+    --hero-copy-paragraph-top: 48svh;
+    --hero-actions-gap: 112px;
+  }
+
+  .p-button { min-height: 43px; }
+}
+
+@media (max-width: 360px) {
+  .p-hero-actions { gap: 6px; }
+  .p-button { gap: 10px; padding-inline: 11px; font-size: .57rem; white-space: nowrap; }
+}

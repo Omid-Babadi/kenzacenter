@@ -1,0 +1,32 @@
+/* Reliable, touch-friendly right drawer behaviour on narrow screens. */
+@media (max-width: 820px) {
+  .ad-mobile-menu {
+    position: relative;
+    z-index: 26;
+    display: grid !important;
+    pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ad-sidebar {
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(100%, 0, 0);
+    transition: transform .3s cubic-bezier(.2,.75,.25,1), visibility 0s linear .3s;
+    will-change: transform;
+  }
+
+  .ad-sidebar.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0s;
+  }
+
+  .ad-overlay.is-visible {
+    display: block;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+}

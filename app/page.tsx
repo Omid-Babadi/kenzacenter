@@ -5,6 +5,7 @@ import { ModernHeader } from "@/components/ModernHeader";
 import { MotionManager } from "@/components/MotionManager";
 import "./premium.css";
 import "./landing-geometry.css";
+import "./hero-mobile-fix.css";
 
 const services = [
   { number: "۰۱", title: "طراحی معماری", text: "کانسپت، معماری و نقشه‌های اجرایی با تمرکز هم‌زمان بر تجربه فضا، منطق ساخت و اقتصاد پروژه.", accent: "طراحی" },
