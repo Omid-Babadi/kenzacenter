@@ -1,205 +1,200 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import demo from "@/data/admin-demo.json";
+import { AdminIcon } from "./AdminDashboard";
 
-export type WorkspaceId =
-  | "customers"
-  | "accounting"
-  | "projects"
-  | "blogs"
-  | "inventory"
-  | "users"
-  | "contracts"
-  | "messages"
-  | "reports";
+export type WorkspaceId = "customers" | "projects" | "inventory" | "accounting" | "employees" | "missions" | "team";
+type PageId = "overview" | WorkspaceId;
+type Props = { active: PageId; query: string; onQuery: (value: string) => void; onNavigate: (id: PageId) => void };
+type Customer = (typeof demo.customers)[number];
+type Project = (typeof demo.projects)[number];
+type InventoryItem = (typeof demo.inventory)[number];
+type Employee = (typeof demo.employees)[number];
+type TeamMember = (typeof demo.team)[number];
+type Notice = { text: string; tone: "success" | "warning" } | null;
 
-type Props = {
-  active: WorkspaceId;
-  query: string;
-  onQuery: (value: string) => void;
-};
+const faNumber = (value: number) => new Intl.NumberFormat("fa-IR").format(value);
 
-type Notice = { text: string; tone?: "success" | "warm" } | null;
-
-const Icon = ({ name }: { name: string }) => {
+const WIcon = ({ name }: { name: string }) => {
   const paths: Record<string, string> = {
-    plus: "M12 5v14M5 12h14", search: "m21 21-4.5-4.5M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z",
-    arrow: "m9 18 6-6-6-6", check: "m5 12 4 4L19 6", dots: "M5 12h.01M12 12h.01M19 12h.01",
-    paper: "M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Zm0 0v6h6M8 13h8M8 17h5",
-    inbox: "M4 4h16v13H4zM4 13h4l2 3h4l2-3h4", box: "m21 8-9-5-9 5 9 5 9-5ZM3 8v10l9 5 9-5V8M12 13v10",
-    user: "M20 21a8 8 0 0 0-16 0M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
-    chart: "M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-8", calendar: "M7 3v3M17 3v3M4 9h16M5 5h14v16H5z",
-    filter: "M4 5h16M7 12h10M10 19h4", send: "m22 2-7 20-4-9-9-4Z",
+    plus: "M12 5v14M5 12h14", filter: "M4 5h16M7 12h10M10 19h4", arrow: "m9 18 6-6-6-6", check: "m5 12 4 4L19 6", dots: "M5 12h.01M12 12h.01M19 12h.01",
+    calendar: "M7 3v3M17 3v3M4 9h16M5 5h14v16H5z", clock: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z", location: "M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z",
+    phone: "M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 1.9Z", mail: "M4 4h16v16H4V4Zm0 3 8 6 8-6", edit: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5Z",
+    wallet: "M3 6h18v14H3V6Zm0 3h18M16 14h2", trend: "m3 17 6-6 4 4 8-9M15 6h6v6", box: "m21 8-9-5-9 5 9 5 9-5ZM3 8v10l9 5 9-5V8M12 13v10", users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM23 21v-2a4 4 0 0 0-3-3.9",
+    briefcase: "M9 6V4h6v2M4 6h16v14H4V6Zm0 5h16M10 11v2h4v-2", shield: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Zm-3-10 2 2 4-5", download: "M12 3v12m-5-5 5 5 5-5M5 21h14", route: "M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm12-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM8.5 14.5l7-5",
+    activity: "M3 12h4l2-7 4 14 2-7h6", chevron: "m9 18 6-6-6-6", search: "m21 21-4.5-4.5M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"
   };
-  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={paths[name] || paths.paper} /></svg>;
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={paths[name] || paths.activity} /></svg>;
 };
 
-const statusClass = (label: string) => {
-  if (/فعال|منتشر|آماده|تأیید|وصول|پاسخ/.test(label)) return "is-good";
-  if (/کمبود|تاخیر|بررسی|نیازمند/.test(label)) return "is-alert";
-  if (/پیگیری|مذاکره|انتظار|پیش/.test(label)) return "is-wait";
-  return "is-neutral";
+const toneFor = (value: string) => {
+  if (/طبق|جلوتر|حاضر|انجام شده|پرداخت شده|قرارداد|موجود|دسترسی کامل/.test(value)) return "success";
+  if (/فوری|معوق|کمبود|مرخصی|نیازمند|سررسید/.test(value)) return "danger";
+  if (/در حال|مأموریت|پیگیری|مذاکره|در انتظار|دورکار/.test(value)) return "warning";
+  return "neutral";
 };
 
-function Heading({ eyebrow, title, description, action, onAction }: { eyebrow: string; title: string; description: string; action: string; onAction: () => void }) {
-  return <header className="ad-page-intro ad-workspace-heading">
-    <div><span>{eyebrow}</span><h1>{title}</h1><p>{description}</p></div>
-    <button className="ad-primary-button" onClick={onAction}><Icon name="plus" />{action}</button>
-  </header>;
+function Status({ children }: { children: string }) {
+  return <span className={`ka-status is-${toneFor(children)}`}><i />{children}</span>;
 }
 
-function Segment({ items, value, onChange }: { items: string[]; value: string; onChange: (value: string) => void }) {
-  return <div className="ad-segment" role="tablist">{items.map((item) => <button key={item} className={item === value ? "is-active" : ""} onClick={() => onChange(item)}>{item}</button>)}</div>;
+function PageHeader({ eyebrow, title, description, action, icon = "plus", onAction, secondary }: { eyebrow: string; title: string; description: string; action: string; icon?: string; onAction: () => void; secondary?: ReactNode }) {
+  return <header className="ka-page-header"><div><span className="ka-eyebrow"><i />{eyebrow}</span><h1>{title}</h1><p>{description}</p></div><div className="ka-page-actions">{secondary}<button type="button" className="ka-primary" onClick={onAction}><WIcon name={icon} />{action}</button></div></header>;
 }
 
-function Stat({ label, value, note, tone = "copper" }: { label: string; value: string; note: string; tone?: "copper" | "green" | "dark" }) {
-  return <article className={`ad-card ad-mini-stat ad-stagger ad-tone-${tone}`}><span>{label}</span><strong>{value}</strong><small>{note}</small></article>;
+function StatCard({ label, value, note, icon, tone = "copper", trend }: { label: string; value: string; note: string; icon: string; tone?: string; trend?: string }) {
+  return <article className={`ka-stat ka-card is-${tone}`}><div><span className="ka-stat-icon"><WIcon name={icon} /></span>{trend && <b>{trend}</b>}</div><small>{label}</small><strong>{value}</strong><p>{note}</p></article>;
 }
 
-function SearchBox({ value, onChange, placeholder = "جست‌وجو در این بخش" }: { value: string; onChange: (value: string) => void; placeholder?: string }) {
-  return <label className="ad-workspace-search"><Icon name="search" /><input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} /></label>;
+function Segments({ options, value, onChange }: { options: string[]; value: string; onChange: (value: string) => void }) {
+  return <div className="ka-segments" role="tablist">{options.map((option) => <button type="button" key={option} className={value === option ? "is-active" : ""} onClick={() => onChange(option)}>{option}</button>)}</div>;
 }
 
-function Empty({ title }: { title: string }) {
-  return <div className="ad-workspace-empty"><span>✦</span><strong>{title}</strong><p>می‌توانید نمونه‌ی تازه‌ای ایجاد کنید یا عبارت دیگری را جست‌وجو کنید.</p></div>;
+function LocalSearch({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
+  return <label className="ka-local-search"><WIcon name="search" /><input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} /></label>;
 }
 
-function Modal({ title, text, onClose, onConfirm, confirm = "ثبت نمونه" }: { title: string; text: string; onClose: () => void; onConfirm: () => void; confirm?: string }) {
-  return <div className="ad-demo-modal" role="dialog" aria-modal="true" aria-label={title}>
-    <button className="ad-demo-modal-backdrop" aria-label="بستن" onClick={onClose} />
-    <div className="ad-demo-dialog"><button className="ad-dialog-close" onClick={onClose}>×</button><span className="ad-card-kicker">دموی تعاملی</span><h2>{title}</h2><p>{text}</p>
-      <label className="ad-dialog-field"><span>عنوان نمونه</span><input defaultValue="مورد جدید کنزا" /></label>
-      <div className="ad-dialog-actions"><button className="ad-text-button" onClick={onClose}>انصراف</button><button className="ad-primary-button" onClick={onConfirm}><Icon name="check" />{confirm}</button></div>
-    </div>
-  </div>;
+function EmptyState() {
+  return <div className="ka-empty"><span><WIcon name="search" /></span><strong>نتیجه‌ای پیدا نشد</strong><p>فیلترها را تغییر دهید یا عبارت دیگری جست‌وجو کنید.</p></div>;
+}
+
+function Drawer({ title, kicker, onClose, children }: { title: string; kicker: string; onClose: () => void; children: ReactNode }) {
+  return <div className="ka-drawer-shell" role="dialog" aria-modal="true" aria-label={title}><button className="ka-drawer-backdrop" onClick={onClose} aria-label="بستن" /><aside className="ka-drawer"><button className="ka-drawer-close" onClick={onClose} aria-label="بستن"><AdminIcon name="close" /></button><span className="ka-eyebrow"><i />{kicker}</span><h2>{title}</h2>{children}</aside></div>;
+}
+
+function Overview({ navigate, notify }: { navigate: Props["onNavigate"]; notify: (text: string) => void }) {
+  const [done, setDone] = useState<string[]>([]);
+  const tasks = ["تأیید پرداخت صورت‌وضعیت چهارباغ", "بررسی کمبود پروفیل کارگاه صفه", "تماس نهایی با خانواده رستگار"];
+  const toggle = (task: string) => setDone((items) => items.includes(task) ? items.filter((item) => item !== task) : [...items, task]);
+  return <>
+    <PageHeader eyebrow="مرکز فرماندهی امروز" title="صبح بخیر، کیارش 👋" description="وضعیت کسب‌وکار آرام است؛ دو موضوع مهم در تأمین و یک سررسید مالی برای تصمیم شما باقی مانده." action="برنامه مأموریت‌ها" icon="route" onAction={() => navigate("missions")} secondary={<button className="ka-secondary" onClick={() => notify("خلاصه مدیریتی دمو آماده شد.")}><WIcon name="download" />خروجی گزارش روزانه</button>} />
+    <section className="ka-hero-command">
+      <div className="ka-hero-copy"><span>شاخص سلامت مجموعه</span><h2>۸۷<small>٪</small></h2><strong><i />۴ درصد بهتر از هفته پیش</strong><p>چهار پروژه از پنج پروژه در محدوده کنترل هستند. تنها پروژه صفه نیاز به تصمیم فنی دارد.</p><button onClick={() => navigate("projects")}>مشاهده پالس پروژه‌ها <WIcon name="arrow" /></button></div>
+      <div className="ka-hero-orbit"><span className="ka-orbit one" /><span className="ka-orbit two" /><span className="ka-orbit-core"><WIcon name="activity" /><b>LIVE</b></span><i className="ka-orbit-dot dot-a" /><i className="ka-orbit-dot dot-b" /></div>
+      <div className="ka-hero-side"><article><span>فرصت‌های فروش</span><strong>۲۴۶ <small>میلیارد</small></strong><b>۶ پرونده فعال</b></article><article><span>مأموریت‌های امروز</span><strong>۵ <small>برنامه</small></strong><b>۱ مورد در حال انجام</b></article><article><span>مانده قابل تخصیص</span><strong>۳۸.۴ <small>میلیارد</small></strong><b>پایدار</b></article></div>
+    </section>
+    <div className="ka-stat-grid"><StatCard label="مشتریان فعال" value="۴۸" note="۶ سرنخ تازه در شهریور" icon="users" trend="+۱۲٪" /><StatCard label="پروژه‌های در اجرا" value="۵" note="میانگین پیشرفت ۵۰.۴٪" icon="briefcase" tone="ink" /><StatCard label="ارزش موجودی" value="۱۸.۲ میلیارد" note="۲ قلم زیر نقطه سفارش" icon="box" tone="blue" /><StatCard label="مطالبات این ماه" value="۱۲.۸ میلیارد" note="۴.۸ میلیارد معوق" icon="wallet" tone="green" /></div>
+    <section className="ka-dashboard-grid">
+      <article className="ka-card ka-project-pulse"><div className="ka-panel-head"><div><span>وضعیت زنده</span><h3>پیشرفت پروژه‌ها</h3></div><button onClick={() => navigate("projects")}>همه پروژه‌ها <WIcon name="arrow" /></button></div>{demo.projects.slice(0, 4).map((project) => <button type="button" className="ka-pulse-row" key={project.id} onClick={() => navigate("projects")}><span className={`ka-project-dot is-${project.color}`} /> <div><strong>{project.name}</strong><small>{project.phase} · {project.manager}</small><p><i style={{ width: `${project.progress}%` }} /></p></div><b>{faNumber(project.progress)}٪</b><Status>{project.status}</Status></button>)}</article>
+      <article className="ka-card ka-tasks"><div className="ka-panel-head"><div><span>تمرکز امروز</span><h3>اولویت‌های شما</h3></div><b>{faNumber(done.length)}/{faNumber(tasks.length)}</b></div><div>{tasks.map((task, index) => <button type="button" className={done.includes(task) ? "is-done" : ""} onClick={() => toggle(task)} key={task}><span>{done.includes(task) ? <WIcon name="check" /> : `۰${index + 1}`}</span><div><strong>{task}</strong><small>{index === 0 ? "تا ساعت ۱۱:۳۰" : index === 1 ? "فوریت بالا" : "تا پایان امروز"}</small></div><WIcon name="chevron" /></button>)}</div><p>با کلیک روی هر مورد، آن را انجام‌شده علامت بزنید.</p></article>
+      <article className="ka-card ka-cash-chart"><div className="ka-panel-head"><div><span>جریان نقدی</span><h3>ورودی و خروجی ۶ ماه</h3></div><Status>رشد ۱۸٪</Status></div><div className="ka-chart-legend"><span><i />دریافتی</span><span><i />پرداختی</span></div><div className="ka-bars">{[[38,24],[52,31],[44,35],[68,42],[58,48],[82,51]].map((bar, index) => <div key={index}><span><i style={{ height: `${bar[0]}%` }} /><b style={{ height: `${bar[1]}%` }} /></span><small>{["فرو", "خرد", "تیر", "مرد", "شهر", "مهر"][index]}</small></div>)}</div></article>
+      <article className="ka-card ka-timeline"><div className="ka-panel-head"><div><span>رویدادهای نزدیک</span><h3>برنامه امروز تیم</h3></div><button onClick={() => navigate("missions")}><WIcon name="calendar" /></button></div>{demo.missions.slice(0, 4).map((mission) => <button key={mission.id} onClick={() => navigate("missions")}><time>{mission.time.split(" تا ")[0]}</time><i /><div><strong>{mission.title}</strong><small>{mission.assignee} · {mission.project}</small></div></button>)}</article>
+    </section>
+  </>;
 }
 
 function Customers({ query, onQuery, notify }: { query: string; onQuery: Props["onQuery"]; notify: (text: string) => void }) {
   const [stage, setStage] = useState("همه");
-  const [dialog, setDialog] = useState(false);
-  const [leads, setLeads] = useState([
-    { name: "آرمان نیک‌فر", project: "رزیدنس چهارباغ", value: "۲۸ میلیارد", stage: "جلسه", initials: "آ ن" },
-    { name: "شرکت توسعه سپاهان", project: "مجموعه صفه", value: "۱۲۰ میلیارد", stage: "پیگیری", initials: "ت س" },
-    { name: "سارا رستگار", project: "خانه جلفا", value: "۴۶ میلیارد", stage: "جدید", initials: "س ر" },
-    { name: "کیوان پارسامَنش", project: "ویلای باغ‌بهادران", value: "۳۲ میلیارد", stage: "برآورد", initials: "ک پ" },
-  ]);
-  const filtered = useMemo(() => leads.filter((lead) => (stage === "همه" || lead.stage === stage) && `${lead.name} ${lead.project}`.includes(query)), [leads, stage, query]);
-  const addLead = () => { setLeads((items) => [{ name: "پرهام آذر", project: "بازطراحی دفتر مرکزی", value: "۱۸ میلیارد", stage: "جدید", initials: "پ آ" }, ...items]); setDialog(false); notify("سرنخ نمونه به فهرست مشتریان اضافه شد."); };
-  return <><Heading eyebrow="ارتباط با مشتری" title="میز کار مشتریان" description="هر سرنخ را از اولین تماس تا قرارداد، در یک نمای متمرکز دنبال کنید." action="سرنخ جدید" onAction={() => setDialog(true)} />
-    <div className="ad-mini-stat-grid"><Stat label="سرنخ‌های این ماه" value="۲۸" note="۶ مورد آماده‌ی جلسه" /><Stat label="ارزش فرصت‌ها" value="۲۴۶ میلیارد" note="تا پایان پاییز" tone="dark" /><Stat label="نرخ تبدیل" value="۳۶٪" note="۵٪ بهتر از ماه قبل" tone="green" /></div>
-    <section className="ad-card ad-workspace-card"><div className="ad-workspace-toolbar"><Segment items={["همه", "جدید", "پیگیری", "جلسه", "برآورد"]} value={stage} onChange={setStage} /><SearchBox value={query} onChange={onQuery} placeholder="نام مشتری یا پروژه" /></div>
-      <div className="ad-lead-grid">{filtered.map((lead, index) => <article className="ad-lead-card ad-stagger" style={{ "--delay": `${index * 45}ms` } as React.CSSProperties} key={`${lead.name}-${lead.project}`}><div className="ad-lead-top"><span className="ad-initials">{lead.initials}</span><span className={`ad-status ${statusClass(lead.stage)}`}>{lead.stage}</span></div><h2>{lead.name}</h2><p>{lead.project}</p><div><span>برآورد همکاری</span><strong>{lead.value}</strong></div><button className="ad-text-button" onClick={() => notify(`کارت «${lead.name}» برای پیگیری انتخاب شد.`)}>مشاهده‌ی پرونده <Icon name="arrow" /></button></article>)}</div>{!filtered.length && <Empty title="مشتری مطابق جست‌وجو پیدا نشد" />}
-    </section>{dialog && <Modal title="ثبت سرنخ جدید" text="با ثبت این فرم، یک مشتری ساختگی برای نمایش جریان کاری پنل ایجاد می‌شود." onClose={() => setDialog(false)} onConfirm={addLead} />}</>;
+  const [customers, setCustomers] = useState<Customer[]>(demo.customers);
+  const [selected, setSelected] = useState<Customer | null>(null);
+  const filtered = customers.filter((customer) => (stage === "همه" || customer.stage === stage) && Object.values(customer).join(" ").includes(query));
+  const add = () => { const fresh: Customer = { ...demo.customers[0], id: `CUS-${1050 + customers.length}`, name: "پرنیا صادقی", initials: "پ ص", project: "خانه مسکونی ناژوان", stage: "جدید", value: "۲۲ میلیارد", lastContact: "همین حالا", nextAction: "تماس آشنایی" }; setCustomers((items) => [fresh, ...items]); notify("مشتری نمونه به ابتدای فهرست اضافه شد."); };
+  return <>
+    <PageHeader eyebrow="مدیریت ارتباط با مشتری" title="لیست مشتری‌ها" description="تمام سرنخ‌ها و کارفرماها، ارزش فرصت، آخرین تماس و اقدام بعدی را در یک نمای متمرکز دنبال کنید." action="مشتری جدید" onAction={add} secondary={<button className="ka-secondary" onClick={() => notify("خروجی Excel مشتریان آماده شد.")}><WIcon name="download" />خروجی</button>} />
+    <div className="ka-stat-grid"><StatCard label="کل مشتریان" value={faNumber(customers.length + 42)} note="۶ پرونده در این نما" icon="users" trend="+۸ این ماه" /><StatCard label="ارزش فرصت‌ها" value="۲۸۴ میلیارد" note="۳۶٪ نرخ تبدیل" icon="trend" tone="ink" /><StatCard label="پیگیری امروز" value="۹" note="۳ مورد با اولویت بالا" icon="phone" tone="blue" /><StatCard label="رضایت مشتری" value="۹۲٪" note="بر اساس ۲۸ بازخورد" icon="activity" tone="green" /></div>
+    <section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "جدید", "پیگیری", "جلسه", "برآورد", "قرارداد"]} value={stage} onChange={setStage} /><div><LocalSearch value={query} onChange={onQuery} placeholder="نام مشتری، پروژه یا مسئول..." /><button className="ka-square-button"><WIcon name="filter" /></button></div></div><div className="ka-table-scroll"><table className="ka-table"><thead><tr><th>مشتری</th><th>پروژه / فرصت</th><th>مرحله</th><th>ارزش تخمینی</th><th>آخرین ارتباط</th><th>مسئول پرونده</th><th /></tr></thead><tbody>{filtered.map((customer, index) => <tr key={customer.id} style={{ "--row-delay": `${index * 35}ms` } as CSSProperties} onClick={() => setSelected(customer)}><td><div className="ka-person-cell"><span>{customer.initials}</span><div><strong>{customer.name}</strong><small>{customer.id} · {customer.phone}</small></div></div></td><td><strong>{customer.project}</strong><small className="ka-cell-sub">اقدام بعدی: {customer.nextAction}</small></td><td><Status>{customer.stage}</Status></td><td><b className="ka-money">{customer.value}</b></td><td><span>{customer.lastContact}</span></td><td><span>{customer.owner}</span></td><td><button aria-label="مشاهده پرونده"><WIcon name="chevron" /></button></td></tr>)}</tbody></table></div>{!filtered.length && <EmptyState />}</section>
+    {selected && <Drawer title={selected.name} kicker="پرونده مشتری" onClose={() => setSelected(null)}><div className="ka-drawer-person"><span>{selected.initials}</span><div><Status>{selected.stage}</Status><small>{selected.id}</small></div></div><div className="ka-drawer-highlight"><small>ارزش فرصت همکاری</small><strong>{selected.value}</strong><span>{selected.project}</span></div><div className="ka-info-grid"><div><small>شماره تماس</small><strong>{selected.phone}</strong></div><div><small>ایمیل</small><strong>{selected.email}</strong></div><div><small>شهر</small><strong>{selected.city}</strong></div><div><small>منبع آشنایی</small><strong>{selected.source}</strong></div><div><small>مسئول پرونده</small><strong>{selected.owner}</strong></div><div><small>آخرین تماس</small><strong>{selected.lastContact}</strong></div></div><div className="ka-note"><strong>یادداشت پرونده</strong><p>{selected.note}</p></div><div className="ka-drawer-actions"><button className="ka-primary" onClick={() => { notify(`پیگیری «${selected.name}» برای امروز ثبت شد.`); setSelected(null); }}><WIcon name="phone" />ثبت پیگیری</button><button className="ka-secondary"><WIcon name="edit" />ویرایش</button></div></Drawer>}
+  </>;
 }
 
-function Accounting({ notify }: { notify: (text: string) => void }) {
-  const [range, setRange] = useState("ماه جاری");
-  const [docs, setDocs] = useState([
-    ["KNZ-۱۴۰۵-۲۸۱", "صورت‌وضعیت اجرای نما", "۴٫۸ میلیارد", "تأیید شده"],
-    ["KNZ-۱۴۰۵-۲۸۰", "خرید پروفیل و اتصالات", "۱٫۳ میلیارد", "در انتظار"],
-    ["KNZ-۱۴۰۵-۲۷۹", "پیش‌پرداخت پیمانکار برق", "۸۷۰ میلیون", "پرداخت شده"],
-  ]);
-  const addDocument = () => { setDocs((rows) => [["KNZ-۱۴۰۵-۲۸۲", "هزینه‌ی نمونه‌ی جدید", "۳۴۰ میلیون", "در انتظار"], ...rows]); notify("سند نمونه ثبت شد؛ در این نسخه داده‌ها دائمی نیستند."); };
-  return <><Heading eyebrow="مالی و پرداخت‌ها" title="جریان نقدی پروژه‌ها" description="دریافت‌ها، تعهدات و اسناد اجرایی را به‌صورت زنده در کنار هم مرور کنید." action="ثبت سند" onAction={addDocument} />
-    <div className="ad-mini-stat-grid"><Stat label="دریافت نقدی" value="۱۲٫۸ میلیارد" note="۱۸٫۴٪ رشد ماهانه" tone="green" /><Stat label="پرداخت برنامه‌ریزی‌شده" value="۶٫۱ میلیارد" note="تا ۱۰ روز آینده" /><Stat label="مطالبات جاری" value="۴٫۲ میلیارد" note="۳ سند نیازمند پیگیری" tone="dark" /></div>
-    <div className="ad-finance-grid"><section className="ad-card ad-finance-chart"><div className="ad-card-head"><div><span className="ad-card-kicker">خلاصه‌ی مالی</span><h2>{range === "ماه جاری" ? "۱۲٫۸ میلیارد تومان" : range === "سه‌ماهه" ? "۳۴٫۶ میلیارد تومان" : "۱۰۴٫۲ میلیارد تومان"}</h2><p>دریافت نقدی <b>+۱۸٫۴٪</b></p></div><Segment items={["ماه جاری", "سه‌ماهه", "سال"]} value={range} onChange={setRange} /></div><div className="ad-bars" aria-label="نمودار درآمد"><i style={{ height: "34%" }} /><i style={{ height: "53%" }} /><i style={{ height: "44%" }} /><i style={{ height: "68%" }} /><i style={{ height: "58%" }} /><i style={{ height: "84%" }} /><i className="is-last" style={{ height: "72%" }} /></div><div className="ad-bars-labels"><span>فروردین</span><span>اردیبهشت</span><span>خرداد</span><span>تیر</span><span>مرداد</span><span>شهریور</span><span>مهر</span></div></section>
-      <section className="ad-card ad-finance-summary"><span className="ad-card-kicker">تقویم پرداخت</span><h3>۲ پرداخت در این هفته</h3><ul><li><i /><div><strong>تأمین سنگ آریا</strong><span>سه‌شنبه، ۱۶ شهریور</span></div><b>۸۶۰ میلیون</b></li><li><i /><div><strong>پیمانکار تأسیسات</strong><span>پنج‌شنبه، ۱۸ شهریور</span></div><b>۳۲۰ میلیون</b></li></ul><button className="ad-text-button" onClick={() => notify("تقویم پرداخت دموی کنزا به‌روزرسانی شد.")}>مشاهده‌ی تقویم <Icon name="arrow" /></button></section></div>
-    <section className="ad-card ad-workspace-card ad-records"><div className="ad-records-title"><div><span className="ad-card-kicker">آخرین اسناد</span><h2>گردش حساب‌ها</h2></div><span className="ad-live-dot">آخرین همگام‌سازی: همین حالا</span></div>{docs.map((doc) => <button className="ad-record-row" key={doc[0]} onClick={() => notify(`جزئیات سند ${doc[0]} باز شد.`)}><span><Icon name="paper" /></span><div><strong>{doc[1]}</strong><small>{doc[0]} · رزیدنس چهارباغ</small></div><b>{doc[2]}</b><em className={`ad-status ${statusClass(doc[3])}`}>{doc[3]}</em><Icon name="arrow" /></button>)}</section></>;
-}
-
-function Projects({ notify }: { notify: (text: string) => void }) {
+function Projects({ query, notify }: { query: string; notify: (text: string) => void }) {
   const [filter, setFilter] = useState("همه");
-  const [selected, setSelected] = useState<string | null>(null);
-  const [items, setItems] = useState([
-    { name: "رزیدنس چهارباغ", type: "مسکونی", progress: 72, owner: "مهندس مرادی", status: "طبق برنامه", milestone: "اتمام پوسته‌ی نما" },
-    { name: "مجموعه صفه", type: "تجاری ـ اداری", progress: 48, owner: "مهندس زمانی", status: "نیازمند بررسی", milestone: "تأیید نقشه‌های سازه" },
-    { name: "خانه جلفا", type: "بازآفرینی", progress: 89, owner: "مهندس نیک‌پی", status: "طبق برنامه", milestone: "نصب روشنایی حیاط" },
-    { name: "برج باغ نور", type: "مسکونی", progress: 34, owner: "مهندس کیانی", status: "در حال اجرا", milestone: "بتن‌ریزی طبقه هفتم" },
-  ]);
-  const filtered = items.filter((project) => filter === "همه" || (filter === "طبق برنامه" ? project.status === "طبق برنامه" : project.status !== "طبق برنامه"));
-  const addProject = () => { setItems((value) => [{ name: "خانه‌ی باغ نقش‌جهان", type: "مسکونی", progress: 8, owner: "مهندس کیانی", status: "در حال اجرا", milestone: "تکمیل مطالعات اولیه" }, ...value]); notify("پروژه‌ی نمونه ایجاد شد."); };
-  return <><Heading eyebrow="کنترل اجرا" title="برد پروژه‌های کنزا" description="هر پروژه یک پرونده‌ی زنده است؛ وضعیت، گام بعدی و تیم مسئول را از همین‌جا مرور کنید." action="پروژه جدید" onAction={addProject} />
-    <section className="ad-card ad-workspace-card"><div className="ad-workspace-toolbar"><Segment items={["همه", "طبق برنامه", "نیازمند توجه"]} value={filter} onChange={setFilter} /><span className="ad-project-count">{items.length} پروژه‌ی فعال</span></div><div className="ad-project-board">{filtered.map((project, index) => <button className="ad-project-tile ad-stagger" style={{ "--delay": `${index * 50}ms` } as React.CSSProperties} key={project.name} onClick={() => setSelected(project.name)}><div><span className={`ad-status ${statusClass(project.status)}`}>{project.status}</span><span className="ad-tile-index">۰{index + 1}</span></div><h2>{project.name}</h2><p>{project.type} · {project.owner}</p><div className="ad-tile-progress"><span><i style={{ width: `${project.progress}%` }} /></span><b>{project.progress}٪</b></div><small>گام بعدی: {project.milestone}</small></button>)}</div></section>
-    {selected && <aside className="ad-project-drawer"><button className="ad-demo-modal-backdrop" onClick={() => setSelected(null)} aria-label="بستن" /><div><button className="ad-dialog-close" onClick={() => setSelected(null)}>×</button><span className="ad-card-kicker">پرونده‌ی پروژه</span><h2>{selected}</h2><p>نمای تفصیلی این پروژه برای دمو آماده است؛ پیشرفت‌ها و تصمیم‌های اخیر در اینجا دیده می‌شوند.</p><div className="ad-drawer-progress"><strong>{items.find((item) => item.name === selected)?.progress}٪</strong><span>پیشرفت اجرایی</span></div><ul className="ad-drawer-list"><li><i />بازدید ناظر برای فردا ثبت شده است.</li><li><i />آخرین گزارش کارگاهی بارگذاری شد.</li><li><i />بودجه با برنامه‌ی مصوب هم‌راستا است.</li></ul><button className="ad-primary-button" onClick={() => { setSelected(null); notify("یادآور جلسه‌ی پروژه ثبت شد."); }}><Icon name="calendar" />ثبت یادآور جلسه</button></div></aside>}</>;
+  const [selected, setSelected] = useState<Project | null>(null);
+  const projects = demo.projects.filter((project) => (filter === "همه" || project.status === filter) && Object.values(project).flat().join(" ").includes(query));
+  return <>
+    <PageHeader eyebrow="دفتر کنترل پروژه" title="پروژه‌ها" description="پیشرفت، بودجه مصرف‌شده، تیم مسئول و نقاط تصمیم هر پروژه را بدون از دست دادن تصویر کلان ببینید." action="پروژه جدید" onAction={() => notify("فرم پروژه جدید در حالت دمو آماده شد.")} secondary={<button className="ka-secondary" onClick={() => notify("نمای گانت پروژه‌ها فعال شد.")}><WIcon name="calendar" />تقویم اجرایی</button>} />
+    <div className="ka-project-summary"><div><span>بودجه کل پروژه‌های فعال</span><strong>۴۲۵ <small>میلیارد تومان</small></strong><p><i style={{ width: "61%" }} /></p><small>۲۱۸.۴ میلیارد هزینه ثبت‌شده</small></div><div>{[["طبق برنامه","۳ پروژه","success"],["نیازمند تصمیم","۱ پروژه","danger"],["میانگین پیشرفت","۵۰.۴٪","warning"]].map((item) => <article key={item[0]}><i className={`is-${item[2]}`} /><span>{item[0]}</span><strong>{item[1]}</strong></article>)}</div></div>
+    <section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "طبق برنامه", "نیازمند توجه", "جلوتر از برنامه", "در شروع"]} value={filter} onChange={setFilter} /><span className="ka-count">{faNumber(projects.length)} پروژه نمایش داده می‌شود</span></div><div className="ka-project-grid">{projects.map((project, index) => <button className={`ka-project-card is-${project.color}`} style={{ "--row-delay": `${index * 55}ms` } as CSSProperties} key={project.id} onClick={() => setSelected(project)}><header><span>{project.id}</span><Status>{project.status}</Status></header><h3>{project.name}</h3><p>{project.type} · {project.client}</p><div className="ka-project-progress"><div><span>پیشرفت فیزیکی</span><b>{faNumber(project.progress)}٪</b></div><p><i style={{ width: `${project.progress}%` }} /></p></div><div className="ka-project-meta"><span><small>فاز فعلی</small><strong>{project.phase}</strong></span><span><small>موعد تحویل</small><strong>{project.deadline}</strong></span></div><footer><div className="ka-avatar-stack">{project.team.map((person) => <i key={person}>{person}</i>)}</div><span>{project.manager}</span><WIcon name="chevron" /></footer></button>)}</div>{!projects.length && <EmptyState />}</section>
+    {selected && <Drawer title={selected.name} kicker={selected.id} onClose={() => setSelected(null)}><div className="ka-drawer-project-head"><Status>{selected.status}</Status><span>{selected.type}</span></div><div className="ka-drawer-progress"><strong>{faNumber(selected.progress)}٪</strong><div><span>پیشرفت فیزیکی</span><p><i style={{ width: `${selected.progress}%` }} /></p><small>{faNumber(selected.daysLeft)} روز تا موعد تحویل</small></div></div><div className="ka-budget-box"><div><small>بودجه مصوب</small><strong>{selected.budget}</strong></div><div><small>هزینه ثبت‌شده</small><strong>{selected.spent}</strong></div></div><ol className="ka-mini-timeline"><li className="is-done"><i><WIcon name="check" /></i><div><strong>آخرین گزارش کارگاه ثبت شد</strong><small>امروز · ساعت ۰۸:۴۰</small></div></li><li><i>۲</i><div><strong>{selected.nextMilestone}</strong><small>نقطه بعدی پروژه</small></div></li><li><i>۳</i><div><strong>جلسه بازبینی با کارفرما</strong><small>هفته آینده</small></div></li></ol><button className="ka-primary ka-full" onClick={() => { notify(`یادآور پروژه «${selected.name}» ثبت شد.`); setSelected(null); }}><WIcon name="calendar" />ثبت جلسه پیگیری</button></Drawer>}
+  </>;
 }
 
-function Blogs({ notify }: { notify: (text: string) => void }) {
-  const [view, setView] = useState("همه");
-  const [posts, setPosts] = useState([
-    { title: "چطور هزینه‌ی ساخت را کنترل کنیم؟", category: "مدیریت ساخت", state: "منتشر شده", views: "۲٬۴۸۰", color: "sand" },
-    { title: "جزئیات اجرای نمای سنگ خشک", category: "جزئیات اجرایی", state: "منتشر شده", views: "۱٬۷۹۰", color: "ink" },
-    { title: "بازآفرینی خانه‌های تاریخی جلفا", category: "بازسازی", state: "پیش‌نویس", views: "—", color: "olive" },
-    { title: "معماری و ارزش ماندگار", category: "دیدگاه", state: "در بازبینی", views: "—", color: "clay" },
-  ]);
-  const visible = posts.filter((post) => view === "همه" || (view === "منتشر شده" ? post.state === "منتشر شده" : post.state !== "منتشر شده"));
-  const addPost = () => { setPosts((items) => [{ title: "یادداشت تازه‌ی کنزا", category: "دیدگاه", state: "پیش‌نویس", views: "—", color: "sand" }, ...items]); notify("پیش‌نویس تازه به تقویم محتوا اضافه شد."); };
-  return <><Heading eyebrow="رسانه‌ی کنزا" title="اتاق محتوا" description="مقاله‌ها، یادداشت‌های کارگاهی و روایت پروژه‌ها را در یک تقویم سبک مدیریت کنید." action="مطلب جدید" onAction={addPost} />
-    <section className="ad-card ad-workspace-card"><div className="ad-workspace-toolbar"><Segment items={["همه", "منتشر شده", "پیش‌نویس‌ها"]} value={view} onChange={setView} /><button className="ad-quiet-action" onClick={() => notify("تقویم انتشار برای این هفته مرتب شد.")}><Icon name="calendar" />تقویم انتشار</button></div><div className="ad-post-grid">{visible.map((post, index) => <article className={`ad-post-card ad-post-${post.color} ad-stagger`} style={{ "--delay": `${index * 55}ms` } as React.CSSProperties} key={`${post.title}-${index}`}><div className="ad-post-cover"><span>{post.category}</span><i /></div><div className="ad-post-copy"><span className={`ad-status ${statusClass(post.state)}`}>{post.state}</span><h2>{post.title}</h2><p>ویرایش امروز · {post.views} بازدید</p><button className="ad-text-button" onClick={() => notify(`ویرایشگر دموی «${post.title}» باز شد.`)}>باز کردن و ویرایش <Icon name="arrow" /></button></div></article>)}</div></section></>;
+function Inventory({ query, notify }: { query: string; notify: (text: string) => void }) {
+  const [location, setLocation] = useState("همه");
+  const [items, setItems] = useState<InventoryItem[]>(demo.inventory);
+  const visible = items.filter((item) => (location === "همه" || item.location === location) && Object.values(item).join(" ").includes(query));
+  const receive = () => { setItems((rows) => rows.map((item, index) => index === 1 ? { ...item, stock: item.stock + 80, lastMove: "ورود ۸۰ شاخه · همین حالا" } : item)); notify("رسید انبار ثبت شد؛ موجودی پروفیل ۸۰ شاخه افزایش یافت."); };
+  return <>
+    <PageHeader eyebrow="زنجیره تأمین و لجستیک" title="انبارداری" description="موجودی مصالح و تجهیزات را بین انبار مرکزی و کارگاه‌ها کنترل کنید و پیش از توقف اجرا، هشدار تأمین بگیرید." action="ثبت ورود کالا" icon="box" onAction={receive} secondary={<button className="ka-secondary" onClick={() => notify("فرم انتقال بین انبارها باز شد.")}><WIcon name="route" />انتقال کالا</button>} />
+    <div className="ka-stat-grid"><StatCard label="ارزش موجودی" value="۱۸.۲ میلیارد" note="در سه محل نگهداری" icon="wallet" trend="+۲.۱٪" /><StatCard label="اقلام موجود" value="۶۱" note="۱۲ دسته کالایی" icon="box" tone="ink" /><StatCard label="زیر نقطه سفارش" value="۲ قلم" note="پروفیل و چسب اپوکسی" icon="activity" tone="danger" /><StatCard label="گردش امروز" value="۱۱ حواله" note="۷ ورودی · ۴ خروجی" icon="route" tone="green" /></div>
+    <div className="ka-inventory-layout"><section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "انبار مرکزی", "کارگاه صفه", "کارگاه چهارباغ"]} value={location} onChange={setLocation} /><span className="ka-count">آخرین همگام‌سازی: همین حالا</span></div><div className="ka-stock-list">{visible.map((item, index) => { const ratio = Math.min(100, Math.round(item.stock / (item.minimum * 2) * 100)); const low = item.stock < item.minimum; return <button type="button" className="ka-stock-row" key={item.id} style={{ "--row-delay": `${index * 40}ms` } as CSSProperties} onClick={() => notify(`کارت موجودی «${item.name}» انتخاب شد.`)}><span className={`ka-stock-icon ${low ? "is-low" : ""}`}><WIcon name="box" /></span><div className="ka-stock-name"><strong>{item.name}</strong><small>{item.id} · {item.category}</small></div><div className="ka-stock-value"><strong>{faNumber(item.stock)} <small>{item.unit}</small></strong><p><i className={low ? "is-low" : ""} style={{ width: `${ratio}%` }} /></p><small>حداقل: {faNumber(item.minimum)}</small></div><div><small>محل نگهداری</small><strong>{item.location}</strong></div><Status>{low ? "کمبود موجودی" : "موجود"}</Status><WIcon name="chevron" /></button>; })}</div>{!visible.length && <EmptyState />}</section><aside className="ka-card ka-stock-aside"><div className="ka-panel-head"><div><span>هشدار هوشمند</span><h3>نیازهای تأمین</h3></div><b>۲</b></div><article className="is-urgent"><span><WIcon name="activity" /></span><div><strong>پروفیل ۴۰×۸۰</strong><small>۳۴ شاخه پایین‌تر از حداقل</small><p>پیشنهاد سفارش: ۲۸۰ شاخه</p></div></article><article><span><WIcon name="activity" /></span><div><strong>چسب اپوکسی سنگ</strong><small>۷ سطل پایین‌تر از حداقل</small><p>پیشنهاد سفارش: ۴۰ سطل</p></div></article><hr /><div className="ka-panel-head"><div><span>گردش اخیر</span><h3>آخرین عملیات</h3></div></div>{demo.inventory.slice(0, 3).map((item) => <div className="ka-mini-move" key={item.id}><i /><div><strong>{item.name}</strong><small>{item.lastMove}</small></div></div>)}</aside></div>
+  </>;
 }
 
-function Inventory({ notify }: { notify: (text: string) => void }) {
-  const [items, setItems] = useState([
-    { code: "MAT-۰۱۲۸", name: "سنگ تراورتن عباس‌آباد", stock: "۲٬۴۸۰ مترمربع", location: "انبار مرکزی", state: "موجود" },
-    { code: "MAT-۰۱۸۴", name: "پروفیل ۴۰×۸۰", stock: "۱۸۶ شاخه", location: "کارگاه صفه", state: "کمبود موجودی" },
-    { code: "MAT-۰۲۲۱", name: "چسب اپوکسی سنگ", stock: "۳۸ سطل", location: "کارگاه چهارباغ", state: "سفارش‌گذاری" },
-  ]);
-  const register = () => { setItems((rows) => [{ code: "MAT-۰۲۴۰", name: "اتصالات گالوانیزه", stock: "۱۲۰ بسته", location: "انبار مرکزی", state: "موجود" }, ...rows]); notify("ورود کالای نمونه ثبت و موجودی به‌روز شد."); };
-  return <><Heading eyebrow="مصالح و تجهیزات" title="دیدبان انبار" description="موجودی‌های حساس، ورودی‌ها و نیازهای تأمین را پیش از اثرگذاری بر کارگاه ببینید." action="ثبت ورود کالا" onAction={register} />
-    <div className="ad-mini-stat-grid"><Stat label="ارزش موجودی" value="۱۸٫۲ میلیارد" note="در ۳ محل نگهداری" /><Stat label="اقلام حساس" value="۳ مورد" note="نیازمند تأمین تا پنج روز" tone="dark" /><Stat label="ورود امروز" value="۱۱ قلم" note="آخرین ثبت: ۱۱:۴۰" tone="green" /></div>
-    <section className="ad-card ad-workspace-card ad-inventory-card"><div className="ad-warehouse-strip"><span className="ad-card-kicker">محل نگهداری</span><button className="is-active">انبار مرکزی <b>۲۸</b></button><button onClick={() => notify("موجودی کارگاه صفه: ۱۴ قلم فعال")}>کارگاه صفه <b>۱۴</b></button><button onClick={() => notify("موجودی کارگاه چهارباغ: ۱۹ قلم فعال")}>کارگاه چهارباغ <b>۱۹</b></button></div><div className="ad-stock-list">{items.map((item, index) => <button key={item.code} className="ad-stock-row ad-stagger" style={{ "--delay": `${index * 40}ms` } as React.CSSProperties} onClick={() => notify(`کارت موجودی «${item.name}» انتخاب شد.`)}><span className="ad-stock-icon"><Icon name="box" /></span><div><strong>{item.name}</strong><small>{item.code} · {item.location}</small></div><b>{item.stock}</b><em className={`ad-status ${statusClass(item.state)}`}>{item.state}</em><Icon name="arrow" /></button>)}</div></section></>;
+function Accounting({ query, notify }: { query: string; notify: (text: string) => void }) {
+  const [filter, setFilter] = useState("همه");
+  const [paid, setPaid] = useState<string[]>([]);
+  const transactions = demo.transactions.filter((item) => (filter === "همه" || item.type === filter) && Object.values(item).join(" ").includes(query));
+  const pay = (id: string) => { setPaid((items) => [...items, id]); notify("تراکنش نمونه به وضعیت پرداخت‌شده تغییر کرد."); };
+  return <>
+    <PageHeader eyebrow="مرکز مالی" title="حسابداری" description="تصویری سریع از نقدینگی، مطالبات، تعهدات و صورت‌وضعیت پروژه‌ها برای تصمیم‌های روزانه مدیریت." action="ثبت تراکنش" icon="wallet" onAction={() => notify("فرم ثبت تراکنش دمو آماده شد.")} secondary={<button className="ka-secondary" onClick={() => notify("گزارش جریان نقدی ساخته شد.")}><WIcon name="download" />گزارش مالی</button>} />
+    <section className="ka-finance-hero"><div><span>مانده نقد قابل تخصیص</span><strong>۳۸.۴ <small>میلیارد تومان</small></strong><b><WIcon name="trend" />۱۸٪ رشد نسبت به ماه قبل</b><p>آخرین به‌روزرسانی: امروز، ۱۰:۴۵</p></div><div>{[["مطالبات","۱۲.۸ میلیارد","۴.۸ معوق"],["تعهدات","۹.۶ میلیارد","تا ۳۰ روز آینده"],["درآمد شهریور","۲۶.۲ میلیارد","۷۴٪ هدف ماه"]].map((item) => <article key={item[0]}><span>{item[0]}</span><strong>{item[1]}</strong><small>{item[2]}</small></article>)}</div></section>
+    <div className="ka-finance-layout"><article className="ka-card ka-finance-chart"><div className="ka-panel-head"><div><span>تحلیل شش‌ماهه</span><h3>دریافت و پرداخت</h3></div><Segments options={["۶ ماه", "سال ۱۴۰۵"]} value="۶ ماه" onChange={() => notify("بازه گزارش در نسخه دمو ثابت است.")} /></div><div className="ka-finance-total"><div><small>کل دریافتی</small><strong>۱۴۸.۶ میلیارد</strong></div><div><small>کل پرداختی</small><strong>۱۰۹.۲ میلیارد</strong></div></div><div className="ka-wide-bars">{[[55,35],[68,49],[52,42],[78,58],[69,61],[91,64]].map((bar,index) => <div key={index}><span><i style={{ height: `${bar[0]}%` }} /><b style={{ height: `${bar[1]}%` }} /></span><small>{["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور"][index]}</small></div>)}</div></article><aside className="ka-card ka-due-card"><div className="ka-panel-head"><div><span>سررسید نزدیک</span><h3>نیازمند اقدام</h3></div><b>۳</b></div><div className="ka-due-main"><small>امروز</small><strong>۶.۸ میلیارد</strong><span>صورت‌وضعیت رزیدنس چهارباغ</span><button onClick={() => notify("یادآور برای واحد مالی ارسال شد.")}>ارسال یادآور <WIcon name="arrow" /></button></div><div className="ka-due-row"><i className="is-warning" /><div><strong>خرید پروفیل سازه</strong><small>فردا · ۲.۴ میلیارد</small></div></div><div className="ka-due-row"><i /><div><strong>تجهیزات مکانیکی صفه</strong><small>۱۳ شهریور · ۳.۱ میلیارد</small></div></div></aside></div>
+    <section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "دریافتی", "پرداختی"]} value={filter} onChange={setFilter} /><button className="ka-secondary"><WIcon name="filter" />فیلتر پیشرفته</button></div><div className="ka-table-scroll"><table className="ka-table ka-finance-table"><thead><tr><th>شرح تراکنش</th><th>پروژه / طرف حساب</th><th>نوع</th><th>مبلغ</th><th>سررسید</th><th>وضعیت</th></tr></thead><tbody>{transactions.map((item) => { const state = paid.includes(item.id) ? "پرداخت شده" : item.status; return <tr key={item.id}><td><strong>{item.title}</strong><small className="ka-cell-sub">{item.id}</small></td><td><strong>{item.project}</strong><small className="ka-cell-sub">{item.party}</small></td><td><span className={`ka-transaction-type is-${item.type === "دریافتی" ? "income" : "expense"}`}>{item.type}</span></td><td><b className="ka-money">{item.amount}</b></td><td>{item.date}</td><td>{state === "در انتظار تأیید" ? <button className="ka-inline-action" onClick={() => pay(item.id)}>تأیید پرداخت</button> : <Status>{state}</Status>}</td></tr>; })}</tbody></table></div></section>
+  </>;
 }
 
-function Users({ notify }: { notify: (text: string) => void }) {
-  const [group, setGroup] = useState("همه");
-  const people = [
-    { name: "نیما سعیدی", role: "مشتری ویژه", initials: "ن س", project: "رزیدنس چهارباغ", last: "امروز، ۱۰:۴۵" },
-    { name: "مهسا شریفی", role: "سرمایه‌گذار", initials: "م ش", project: "برج باغ نور", last: "دیروز" },
-    { name: "آرین زمانی", role: "پیمانکار", initials: "آ ز", project: "مجموعه صفه", last: "۳ روز پیش" },
-    { name: "سحر موسوی", role: "مالک", initials: "س م", project: "خانه جلفا", last: "۵ روز پیش" },
-  ];
-  const visible = people.filter((person) => group === "همه" || person.role === group);
-  return <><Heading eyebrow="باشگاه مشتریان" title="جامعه‌ی کنزا" description="پروفایل افراد، نقش آن‌ها و آخرین نقطه‌ی تماس را در یک نگاه در اختیار داشته باشید." action="کاربر جدید" onAction={() => notify("فرم ایجاد کاربر نمونه آماده شد.")} />
-    <section className="ad-card ad-workspace-card"><div className="ad-workspace-toolbar"><Segment items={["همه", "مشتری ویژه", "سرمایه‌گذار", "پیمانکار", "مالک"]} value={group} onChange={setGroup} /><span className="ad-project-count">۴۸۲ کاربر ثبت‌شده</span></div><div className="ad-user-grid">{visible.map((person, index) => <article className="ad-user-card ad-stagger" style={{ "--delay": `${index * 50}ms` } as React.CSSProperties} key={person.name}><div><span className="ad-user-avatar">{person.initials}</span><button aria-label="گزینه‌های کاربر" onClick={() => notify(`گزینه‌های «${person.name}» باز شد.`)}><Icon name="dots" /></button></div><h2>{person.name}</h2><span className="ad-status is-neutral">{person.role}</span><p><Icon name="paper" />{person.project}</p><small>آخرین فعالیت: {person.last}</small></article>)}</div></section></>;
+function Employees({ query, notify }: { query: string; notify: (text: string) => void }) {
+  const [department, setDepartment] = useState("همه");
+  const [selected, setSelected] = useState<Employee | null>(null);
+  const employees = demo.employees.filter((person) => (department === "همه" || person.department === department) && Object.values(person).join(" ").includes(query));
+  return <>
+    <PageHeader eyebrow="منابع انسانی" title="لیست کارمندان" description="حضور امروز، نقش سازمانی، بار کاری، عملکرد و برنامه هر همکار را در یک پروفایل منظم مشاهده کنید." action="افزودن کارمند" icon="users" onAction={() => notify("فرم کارمند جدید در حالت دمو باز شد.")} secondary={<button className="ka-secondary" onClick={() => notify("گزارش حضور امروز آماده شد.")}><WIcon name="clock" />گزارش حضور</button>} />
+    <div className="ka-attendance-strip"><div><span>حضور امروز</span><strong>۴ <small>نفر حاضر</small></strong><div className="ka-avatar-stack">{demo.employees.slice(0,4).map((person) => <i key={person.id}>{person.initials}</i>)}</div></div>{[["دورکار","۱ نفر","blue"],["مأموریت","۱ نفر","warning"],["مرخصی","۱ نفر","danger"],["میانگین ورود","۰۸:۰۷","green"]].map((item) => <article key={item[0]}><i className={`is-${item[2]}`} /><span>{item[0]}</span><strong>{item[1]}</strong></article>)}</div>
+    <section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "عملیات", "طراحی", "فنی", "مالی", "تأمین"]} value={department} onChange={setDepartment} /><span className="ka-count">{faNumber(employees.length)} کارمند</span></div><div className="ka-employee-grid">{employees.map((person,index) => <button className="ka-employee-card" key={person.id} style={{ "--row-delay": `${index * 45}ms` } as CSSProperties} onClick={() => setSelected(person)}><header><span className="ka-employee-avatar">{person.initials}<i className={`is-${toneFor(person.status)}`} /></span><Status>{person.status}</Status><WIcon name="dots" /></header><h3>{person.name}</h3><p>{person.role} · {person.department}</p><div className="ka-employee-today"><WIcon name="calendar" /><div><small>برنامه امروز</small><strong>{person.today}</strong></div></div><div className="ka-score-grid"><span><small>عملکرد</small><strong>{faNumber(person.performance)}٪</strong><i><b style={{ width: `${person.performance}%` }} /></i></span><span><small>بار کاری</small><strong>{faNumber(person.workload)}٪</strong><i><b style={{ width: `${person.workload}%` }} /></i></span></div><footer><span>ورود: {person.checkIn}</span><span>{faNumber(person.projects)} پروژه فعال</span></footer></button>)}</div>{!employees.length && <EmptyState />}</section>
+    {selected && <Drawer title={selected.name} kicker="پروفایل کارمند" onClose={() => setSelected(null)}><div className="ka-profile-hero"><span>{selected.initials}<i /></span><div><h3>{selected.role}</h3><p>{selected.department} · همکاری از {selected.joined}</p><Status>{selected.status}</Status></div></div><div className="ka-info-grid"><div><small>تلفن همراه</small><strong>{selected.phone}</strong></div><div><small>ایمیل سازمانی</small><strong>{selected.email}</strong></div><div><small>ورود امروز</small><strong>{selected.checkIn}</strong></div><div><small>پروژه‌های فعال</small><strong>{faNumber(selected.projects)} پروژه</strong></div></div><div className="ka-performance-ring"><span style={{ "--score": `${selected.performance * 3.6}deg` } as CSSProperties}><b>{faNumber(selected.performance)}٪</b><small>امتیاز عملکرد</small></span><div><strong>ارزیابی این ماه</strong><p>کیفیت تحویل و همکاری تیمی بالاتر از میانگین سازمان است.</p><em>+۵٪ نسبت به ماه قبل</em></div></div><div className="ka-note"><strong>برنامه امروز</strong><p>{selected.today}</p></div><button className="ka-primary ka-full" onClick={() => { notify(`گزارش عملکرد «${selected.name}» باز شد.`); setSelected(null); }}><WIcon name="activity" />مشاهده گزارش کامل</button></Drawer>}
+  </>;
 }
 
-function Contracts({ notify }: { notify: (text: string) => void }) {
-  const [signed, setSigned] = useState<string[]>(["K-C-۱۴۰۵-۰۴۲", "K-C-۱۴۰۵-۰۳۸"]);
-  const rows = [["K-C-۱۴۰۵-۰۴۲", "توسعه سپاهان", "اجرای کامل مجموعه صفه", "۲۴۰ میلیارد", "فعال"], ["K-C-۱۴۰۵-۰۳۸", "سنگ آریا", "تأمین سنگ نما", "۱۸ میلیارد", "فعال"], ["K-C-۱۴۰۴-۱۱۲", "خانواده رستگار", "بازآفرینی خانه جلفا", "۴۶ میلیارد", "نزدیک سررسید"], ["K-C-۱۴۰۵-۰۲۹", "نیروی دقیق", "تأسیسات مکانیکی", "۱۲ میلیارد", "در بازبینی"]];
-  return <><Heading eyebrow="اسناد حقوقی" title="اتاق قراردادها" description="در هر لحظه بدانید کدام قرارداد امضا شده، در کدام مرحله است و چه تصمیمی لازم دارد." action="قرارداد جدید" onAction={() => notify("پیش‌نویس قرارداد نمونه ایجاد شد.")} />
-    <div className="ad-contract-layout"><section className="ad-card ad-contract-timeline"><span className="ad-card-kicker">مسیر قرارداد نمونه</span><h2>رزیدنس چهارباغ</h2><ol><li className="is-done"><i><Icon name="check" /></i><div><strong>پیش‌نویس و بررسی حقوقی</strong><span>۱۰ شهریور · تکمیل شد</span></div></li><li className="is-done"><i><Icon name="check" /></i><div><strong>تأیید طرفین</strong><span>۱۲ شهریور · تکمیل شد</span></div></li><li><i>۳</i><div><strong>پرداخت مرحله‌ی نخست</strong><span>سررسید ۱۸ شهریور</span></div></li></ol><button className="ad-text-button" onClick={() => notify("چک‌لیست مرحله‌ی بعد باز شد.")}>مشاهده‌ی چک‌لیست <Icon name="arrow" /></button></section>
-      <section className="ad-card ad-workspace-card ad-contract-list"><div className="ad-records-title"><div><span className="ad-card-kicker">فهرست اسناد</span><h2>۴ قرارداد فعال</h2></div><button className="ad-quiet-action" onClick={() => notify("فیلتر قراردادها اعمال شد.")}><Icon name="filter" />فیلتر</button></div>{rows.map((row) => <div className="ad-contract-row" key={row[0]}><div><strong>{row[1]}</strong><small>{row[0]} · {row[2]}</small></div><b>{row[3]}</b>{signed.includes(row[0]) ? <span className="ad-status is-good">امضا شده</span> : <button className="ad-status is-wait" onClick={() => { setSigned((items) => [...items, row[0]]); notify(`قرارداد ${row[0]} در دمو امضا شد.`); }}>تأیید امضا</button>}<em className={`ad-status ${statusClass(row[4])}`}>{row[4]}</em></div>)}</section></div></>;
+function Missions({ query, notify }: { query: string; notify: (text: string) => void }) {
+  const [filter, setFilter] = useState("همه");
+  const [states, setStates] = useState<Record<string, string>>({});
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const missions = demo.missions.map((mission) => ({ ...mission, status: states[mission.id] ?? mission.status })).filter((mission) => (filter === "همه" || mission.status === filter) && Object.values(mission).join(" ").includes(query));
+  const selected = missions.find((mission) => mission.id === selectedId);
+  const finish = (id: string) => { setStates((current) => ({ ...current, [id]: "انجام شده" })); setSelectedId(null); notify("مأموریت انجام شد و در گزارش روزانه ثبت گردید."); };
+  return <>
+    <PageHeader eyebrow="برنامه میدانی تیم" title="مأموریت‌ها" description="بازدید مشتری، کنترل فنی، تحویل کالا و پیگیری‌های امروز را با زمان، مکان و مسئول هر مأموریت مدیریت کنید." action="مأموریت جدید" icon="route" onAction={() => notify("فرم مأموریت جدید در حالت دمو آماده شد.")} secondary={<button className="ka-date-button"><WIcon name="calendar" /><div><small>امروز</small><strong>یکشنبه ۹ شهریور</strong></div><WIcon name="chevron" /></button>} />
+    <div className="ka-mission-day"><div><span>۰۹</span><small>شهریور</small></div><div><strong>برنامه امروز تیم</strong><p>۵ مأموریت · ۴ همکار · ۳ پروژه</p></div><article><span><i className="is-success" />۱ انجام شده</span><span><i className="is-warning" />۱ در حال انجام</span><span><i />۳ پیش رو</span></article><button onClick={() => notify("مسیرهای امروز بهینه‌سازی شد.")}><WIcon name="route" />بهینه‌سازی مسیرها</button></div>
+    <section className="ka-mission-layout"><div className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "برنامه‌ریزی شده", "در حال انجام", "انجام شده"]} value={filter} onChange={setFilter} /><span className="ka-count">نمایش بر اساس ساعت شروع</span></div><div className="ka-mission-list">{missions.map((mission, index) => <button className={`ka-mission-row is-${toneFor(mission.status)}`} key={mission.id} style={{ "--row-delay": `${index * 45}ms` } as CSSProperties} onClick={() => setSelectedId(mission.id)}><time><strong>{mission.time.split(" تا ")[0]}</strong><small>{mission.time.split(" تا ")[1] ? `تا ${mission.time.split(" تا ")[1]}` : ""}</small></time><span className="ka-mission-line"><i /></span><span className="ka-mission-avatar">{mission.initials}</span><div className="ka-mission-copy"><span>{mission.type} · {mission.id}</span><h3>{mission.title}</h3><p><WIcon name="users" />{mission.assignee} برای <b>{mission.client}</b></p><small><WIcon name="location" />{mission.location}</small></div><div className="ka-mission-state"><Status>{mission.status}</Status><em>اولویت {mission.priority}</em></div><WIcon name="chevron" /></button>)}</div>{!missions.length && <EmptyState />}</div><aside className="ka-card ka-mission-side"><div className="ka-panel-head"><div><span>پوشش امروز</span><h3>پروژه‌ها و افراد</h3></div></div><div className="ka-coverage-ring"><span><b>۸۰٪</b><small>پوشش برنامه</small></span></div><div className="ka-coverage-list"><span><i className="is-copper" />رزیدنس چهارباغ <b>۲ مأموریت</b></span><span><i className="is-dark" />مجموعه صفه <b>۱ مأموریت</b></span><span><i className="is-green" />خانه جلفا <b>۱ مأموریت</b></span><span><i className="is-blue" />دفتر ویستا <b>۱ مأموریت</b></span></div><div className="ka-note"><strong>پیشنهاد برنامه</strong><p>بازدید صفه و جلسه ویستا ۳۰ دقیقه فاصله امن زمانی دارند.</p></div></aside></section>
+    {selected && <Drawer title={selected.title} kicker={`جزئیات مأموریت · ${selected.id}`} onClose={() => setSelectedId(null)}><div className="ka-mission-detail-head"><span>{selected.initials}</span><div><strong>{selected.assignee}</strong><small>{selected.type}</small><Status>{selected.status}</Status></div></div><div className="ka-info-grid"><div><small>زمان</small><strong>{selected.time}</strong></div><div><small>اولویت</small><strong>{selected.priority}</strong></div><div><small>مشتری</small><strong>{selected.client}</strong></div><div><small>پروژه</small><strong>{selected.project}</strong></div></div><div className="ka-location-box"><WIcon name="location" /><div><small>محل مأموریت</small><strong>{selected.location}</strong></div><button>مسیریابی</button></div><div className="ka-note"><strong>شرح و دستور کار</strong><p>{selected.note}</p></div>{selected.status !== "انجام شده" ? <button className="ka-primary ka-full" onClick={() => finish(selected.id)}><WIcon name="check" />ثبت انجام مأموریت</button> : <div className="ka-completed-banner"><WIcon name="check" />این مأموریت با موفقیت انجام شده است.</div>}</Drawer>}
+  </>;
 }
 
-function Messages({ notify }: { notify: (text: string) => void }) {
-  const [selected, setSelected] = useState(0);
-  const [answered, setAnswered] = useState<number[]>([]);
-  const messages = [{ from: "مهدی موسوی", subject: "درخواست جلسه‌ی مشارکت", time: "۱۲ دقیقه پیش", body: "سلام، برای بررسی امکان مشارکت در پروژه‌ی مسکونی اصفهان مایل هستم جلسه‌ای داشته باشیم. لطفاً زمان‌های پیشنهادی را ارسال کنید.", channel: "وب‌سایت" }, { from: "مهندس زمانی", subject: "گزارش روزانه‌ی کارگاه", time: "۴۵ دقیقه پیش", body: "گزارش امروز کارگاه صفه آماده و پیوست شده است. عملیات بتن‌ریزی طبق برنامه به پایان رسید.", channel: "داخلی" }, { from: "شرکت سنگ آریا", subject: "اصلاح پیش‌فاکتور", time: "دیروز", body: "نسخه‌ی به‌روزشده‌ی پیش‌فاکتور سنگ نما با نرخ‌های جدید برای تأیید ارسال شد.", channel: "ایمیل" }];
-  const activeMessage = messages[selected];
-  const respond = () => { setAnswered((items) => [...new Set([...items, selected])]); notify("یک پاسخ نمونه ارسال شد و پیام بایگانی گردید."); };
-  return <><Heading eyebrow="صندوق ارتباطات" title="پیام‌های ورودی" description="درخواست‌های سایت، گزارش‌های کارگاهی و مکاتبات را بدون خروج از پنل پاسخ دهید." action="پیام جدید" onAction={() => notify("پنجره‌ی پیام جدید در نسخه‌ی نمایشی باز شد.")} />
-    <section className="ad-card ad-inbox"><div className="ad-inbox-list">{messages.map((message, index) => <button key={message.subject} className={`${index === selected ? "is-active" : ""} ${answered.includes(index) ? "is-read" : ""}`} onClick={() => setSelected(index)}><span className="ad-message-avatar">{message.from.slice(0, 1)}</span><div><strong>{message.from}</strong><b>{message.subject}</b><small>{message.time}</small></div>{!answered.includes(index) && <i />}</button>)}</div><article className="ad-inbox-detail"><div className="ad-inbox-detail-head"><div><span className="ad-card-kicker">{activeMessage.channel}</span><h2>{activeMessage.subject}</h2><p>{activeMessage.from} · {activeMessage.time}</p></div><button className="ad-icon-button" aria-label="گزینه‌ها"><Icon name="dots" /></button></div><div className="ad-message-body"><p>{activeMessage.body}</p><span>این بخش برای نمایش تجربه‌ی واقعی پاسخ‌گویی طراحی شده است.</span></div><div className="ad-reply-box"><input placeholder="پاسخ کوتاه خود را بنویسید…" /><button className="ad-primary-button" onClick={respond}><Icon name="send" />ارسال پاسخ</button></div></article></section></>;
+function Team({ query, notify }: { query: string; notify: (text: string) => void }) {
+  const [filter, setFilter] = useState("همه");
+  const [selected, setSelected] = useState<TeamMember | null>(null);
+  const [permissions, setPermissions] = useState<Record<string, string[]>>(() => Object.fromEntries(demo.team.map((person) => [person.id, person.permissions])));
+  const people = demo.team.filter((person) => (filter === "همه" || person.department === filter) && Object.values(person).flat().join(" ").includes(query));
+  const allPermissions = ["مشتریان", "پروژه‌ها", "انبار", "حسابداری", "کارمندان", "مأموریت‌ها", "تنظیمات"];
+  const togglePermission = (id: string, permission: string) => setPermissions((current) => ({ ...current, [id]: current[id].includes(permission) ? current[id].filter((item) => item !== permission) : [...current[id], permission] }));
+  return <>
+    <PageHeader eyebrow="مدیریت کاربران و امنیت" title="اعضای تیم" description="نقش سازمانی و سطح دسترسی هر عضو را شفاف ببینید؛ مشخص است چه کسی حسابدار، مدیر پروژه یا اپراتور انبار است." action="دعوت عضو جدید" icon="users" onAction={() => notify("لینک دعوت نمونه ساخته و کپی شد.")} secondary={<button className="ka-secondary" onClick={() => notify("گزارش دسترسی‌ها آماده شد.")}><WIcon name="shield" />گزارش دسترسی</button>} />
+    <div className="ka-team-summary"><div><span className="ka-team-icon"><WIcon name="shield" /></span><div><span>وضعیت امنیت فضای کاری</span><strong>همه‌چیز امن و کنترل‌شده است</strong><p>۶ عضو فعال · ۴ نفر آنلاین · احراز هویت دومرحله‌ای برای مدیران فعال</p></div><b>۹۶٪</b></div><div><span><i className="is-green" />دسترسی کامل <b>۱ نفر</b></span><span><i className="is-blue" />دسترسی تخصصی <b>۴ نفر</b></span><span><i className="is-copper" />همکار پروژه <b>۱ نفر</b></span></div></div>
+    <section className="ka-card ka-data-panel"><div className="ka-table-toolbar"><Segments options={["همه", "مدیریت", "مالی", "عملیات", "تأمین", "فروش", "طراحی"]} value={filter} onChange={setFilter} /><span className="ka-count">{faNumber(people.length)} عضو فعال</span></div><div className="ka-team-grid">{people.map((person,index) => <button className="ka-team-card" key={person.id} style={{ "--row-delay": `${index * 45}ms` } as CSSProperties} onClick={() => setSelected(person)}><header><span className="ka-team-avatar">{person.initials}<i className={person.online ? "is-online" : ""} /></span><div><strong>{person.name}</strong><small>{person.id}</small></div><WIcon name="dots" /></header><div className="ka-role-line"><span>{person.role}</span><small>{person.department}</small></div><div className="ka-access-level"><WIcon name="shield" /><div><small>سطح دسترسی</small><strong>{person.accessLevel}</strong></div></div><div className="ka-permission-preview">{permissions[person.id].slice(0,3).map((permission) => <span key={permission}>{permission}</span>)}{permissions[person.id].length > 3 && <b>+{faNumber(permissions[person.id].length - 3)}</b>}</div><footer><span><i className={person.online ? "is-online" : ""} />{person.online ? "آنلاین" : person.lastActive}</span><b>مدیریت دسترسی <WIcon name="chevron" /></b></footer></button>)}</div></section>
+    <section className="ka-card ka-access-matrix"><div className="ka-panel-head"><div><span>نمای سازمانی</span><h3>ماتریس سریع دسترسی</h3></div><small>برای جزئیات روی کارت هر عضو کلیک کنید</small></div><div className="ka-matrix-scroll"><table><thead><tr><th>نقش</th>{["مشتریان","پروژه‌ها","انبار","حسابداری","مأموریت‌ها"].map((item) => <th key={item}>{item}</th>)}</tr></thead><tbody>{demo.team.slice(0,5).map((person) => <tr key={person.id}><td><span>{person.initials}</span><div><strong>{person.name}</strong><small>{person.role}</small></div></td>{["مشتریان","پروژه‌ها","انبار","حسابداری","مأموریت‌ها"].map((item) => <td key={item}>{permissions[person.id].some((permission) => permission.includes(item) || item.includes(permission)) ? <i className="is-allowed"><WIcon name="check" /></i> : <i className="is-denied">—</i>}</td>)}</tr>)}</tbody></table></div></section>
+    {selected && <Drawer title={selected.name} kicker="مدیریت نقش و دسترسی" onClose={() => setSelected(null)}><div className="ka-profile-hero"><span>{selected.initials}<i className={selected.online ? "is-online" : ""} /></span><div><h3>{selected.role}</h3><p>{selected.department} · {selected.lastActive}</p><Status>{selected.accessLevel}</Status></div></div><div className="ka-access-title"><div><strong>مجوزهای این عضو</strong><p>تغییرها فقط در state همین دموی مرورگر اعمال می‌شوند.</p></div><span>{faNumber(permissions[selected.id].length)} فعال</span></div><div className="ka-permission-list">{allPermissions.map((permission) => { const enabled = permissions[selected.id].includes(permission); return <button type="button" key={permission} className={enabled ? "is-enabled" : ""} onClick={() => togglePermission(selected.id, permission)}><span><WIcon name={enabled ? "check" : "shield"} /></span><div><strong>{permission}</strong><small>{enabled ? "اجازه مشاهده و ویرایش" : "بدون دسترسی"}</small></div><i /></button>; })}</div><button className="ka-primary ka-full" onClick={() => { notify(`دسترسی‌های «${selected.name}» ذخیره شد.`); setSelected(null); }}><WIcon name="check" />ذخیره تغییرات دسترسی</button></Drawer>}
+  </>;
 }
 
-function Reports({ notify }: { notify: (text: string) => void }) {
-  const [range, setRange] = useState("شهریور ۱۴۰۵");
-  const [generated, setGenerated] = useState(false);
-  const reports = [{ name: "گزارش تجمیعی پروژه‌ها", owner: "دفتر PMO", format: "PDF", color: "copper" }, { name: "جریان نقدی و تعهدات", owner: "واحد مالی", format: "Excel", color: "ink" }, { name: "تحلیل تأخیرات کارگاهی", owner: "کنترل پروژه", format: "Dashboard", color: "olive" }];
-  return <><Heading eyebrow="هوش مدیریتی" title="گزارش‌ها و بینش‌ها" description="گزارش‌های کلیدی را با یک ساختار خوانا برای جلسه‌های تصمیم‌گیری آماده کنید." action="ساخت گزارش" onAction={() => { setGenerated(true); notify("گزارش نمونه در صف تولید قرار گرفت."); }} />
-    <section className="ad-card ad-report-hero"><div><span className="ad-card-kicker">نمای مدیریتی</span><h2>۴ تصمیم برای این هفته</h2><p>۳ پروژه طبق برنامه‌اند؛ مجموعه‌ی صفه برای تأیید نقشه‌های سازه نیازمند پیگیری است.</p><div className="ad-report-tags"><span>پروژه‌ها</span><span>نقدینگی</span><span>تأمین</span></div></div><div className="ad-report-gauge"><b>۸۷٪</b><span>شاخص سلامت اجرا</span></div></section>
-    <section className="ad-card ad-workspace-card"><div className="ad-workspace-toolbar"><Segment items={["شهریور ۱۴۰۵", "سه‌ماهه‌ی دوم", "سال ۱۴۰۵"]} value={range} onChange={setRange} /><button className="ad-quiet-action" onClick={() => notify(`${range} به‌عنوان بازه‌ی گزارش انتخاب شد.`)}><Icon name="calendar" />بازه‌ی گزارش</button></div><div className="ad-report-grid">{reports.map((report, index) => <article className={`ad-report-card ad-report-${report.color} ad-stagger`} style={{ "--delay": `${index * 60}ms` } as React.CSSProperties} key={report.name}><span className="ad-report-icon"><Icon name="chart" /></span><span className="ad-status is-good">آماده</span><h2>{report.name}</h2><p>{range} · {report.owner}</p><div><button className="ad-text-button" onClick={() => notify(`پیش‌نمایش «${report.name}» آماده شد.`)}>پیش‌نمایش <Icon name="arrow" /></button><b>{report.format}</b></div></article>)}</div>{generated && <div className="ad-generated-note"><Icon name="check" />گزارش «عملکرد هفتگی» ساخته شد و در فهرست نمونه‌ها قابل مشاهده است.</div>}</section></>;
-}
-
-export function DemoWorkspace({ active, query, onQuery }: Props) {
+export function AdminWorkspace({ active, query, onQuery, onNavigate }: Props) {
   const [notice, setNotice] = useState<Notice>(null);
-  const notify = (text: string, tone: Notice extends infer T ? T extends { tone?: infer U } ? U : never : never = "success") => { setNotice({ text, tone: tone as "success" | "warm" }); window.setTimeout(() => setNotice(null), 3300); };
-  const panel = active === "customers" ? <Customers query={query} onQuery={onQuery} notify={notify} />
-    : active === "accounting" ? <Accounting notify={notify} />
-    : active === "projects" ? <Projects notify={notify} />
-    : active === "blogs" ? <Blogs notify={notify} />
-    : active === "inventory" ? <Inventory notify={notify} />
-    : active === "users" ? <Users notify={notify} />
-    : active === "contracts" ? <Contracts notify={notify} />
-    : active === "messages" ? <Messages notify={notify} />
-    : <Reports notify={notify} />;
-  return <><div className="ad-workspace-view">{panel}</div>{notice && <div className={`ad-demo-toast ${notice.tone === "warm" ? "is-warm" : ""}`} role="status"><Icon name="check" />{notice.text}</div>}</>;
+  const notify = (text: string, tone: Notice extends infer T ? T extends { tone: infer U } ? U : never : never = "success") => {
+    setNotice({ text, tone: tone as "success" | "warning" });
+    window.setTimeout(() => setNotice(null), 3200);
+  };
+  const panel = useMemo(() => {
+    if (active === "overview") return <Overview navigate={onNavigate} notify={notify} />;
+    if (active === "customers") return <Customers query={query} onQuery={onQuery} notify={notify} />;
+    if (active === "projects") return <Projects query={query} notify={notify} />;
+    if (active === "inventory") return <Inventory query={query} notify={notify} />;
+    if (active === "accounting") return <Accounting query={query} notify={notify} />;
+    if (active === "employees") return <Employees query={query} notify={notify} />;
+    if (active === "missions") return <Missions query={query} notify={notify} />;
+    return <Team query={query} notify={notify} />;
+  // The memo intentionally re-renders whenever global search or the active workspace changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, query, onQuery, onNavigate]);
+  return <div className="ka-workspace-view">{panel}{notice && <div className={`ka-toast is-${notice.tone}`} role="status"><span><WIcon name="check" /></span><div><strong>{notice.tone === "success" ? "انجام شد" : "توجه"}</strong><p>{notice.text}</p></div></div>}</div>;
 }

@@ -1,0 +1,69 @@
+{
+  "company": {
+    "name": "کنزا",
+    "workspace": "دفتر مدیریت مرکزی",
+    "city": "اصفهان",
+    "manager": "کیارش کیانی",
+    "managerRole": "مدیر ارشد عملیات",
+    "today": "یکشنبه، ۹ شهریور ۱۴۰۵"
+  },
+  "notifications": [
+    { "id": 1, "title": "موجودی پروفیل رو به اتمام است", "meta": "انبار کارگاه صفه · ۱۲ دقیقه پیش", "tone": "danger" },
+    { "id": 2, "title": "بازدید پروژه چهارباغ تا یک ساعت دیگر", "meta": "یادآوری مأموریت مهندس زمانی", "tone": "warning" },
+    { "id": 3, "title": "صورت‌وضعیت خانه جلفا تأیید شد", "meta": "واحد مالی · امروز ۰۹:۱۰", "tone": "success" }
+  ],
+  "customers": [
+    { "id": "CUS-1048", "name": "آرمان نیک‌فر", "initials": "آ ن", "phone": "۰۹۱۲ ۳۷۶ ۸۴۱۲", "email": "arman@nikfar.ir", "project": "رزیدنس چهارباغ", "stage": "جلسه", "value": "۲۸ میلیارد", "lastContact": "امروز، ۱۰:۴۵", "nextAction": "ارائه کانسپت اولیه", "owner": "شادی بهرامی", "source": "معرفی مشتری", "city": "اصفهان", "note": "به طراحی مینیمال و تحویل مرحله‌ای علاقه‌مند است." },
+    { "id": "CUS-1041", "name": "شرکت توسعه سپاهان", "initials": "ت س", "phone": "۰۳۱ ۳۶۲۰ ۱۱۸۰", "email": "office@sepahandev.ir", "project": "مجموعه اداری صفه", "stage": "پیگیری", "value": "۱۲۰ میلیارد", "lastContact": "دیروز، ۱۶:۲۰", "nextAction": "اصلاح برآورد فاز دوم", "owner": "میلاد رستمی", "source": "نمایشگاه صنعت ساختمان", "city": "اصفهان", "note": "تصمیم نهایی پس از جلسه هیئت‌مدیره اعلام می‌شود." },
+    { "id": "CUS-1036", "name": "سارا رستگار", "initials": "س ر", "phone": "۰۹۱۳ ۱۱۰ ۷۸۴۵", "email": "s.rastegar@gmail.com", "project": "بازآفرینی خانه جلفا", "stage": "برآورد", "value": "۴۶ میلیارد", "lastContact": "۲ روز پیش", "nextAction": "ارسال نسخه نهایی قرارداد", "owner": "کیارش کیانی", "source": "وب‌سایت", "city": "اصفهان", "note": "حفظ جزئیات تاریخی بنا اولویت اصلی کارفرماست." },
+    { "id": "CUS-1029", "name": "کیوان پارسامنش", "initials": "ک پ", "phone": "۰۹۱۳ ۸۰۵ ۲۱۹۰", "email": "k.parsa@pm.me", "project": "ویلای باغ‌بهادران", "stage": "جدید", "value": "۳۲ میلیارد", "lastContact": "امروز، ۰۸:۳۰", "nextAction": "تماس آشنایی", "owner": "شادی بهرامی", "source": "اینستاگرام", "city": "باغ‌بهادران", "note": "درخواست طراحی و اجرای کامل با زمان‌بندی فشرده دارد." },
+    { "id": "CUS-1017", "name": "گروه سرمایه‌گذاری ویستا", "initials": "گ و", "phone": "۰۲۱ ۸۸۷۵ ۳۱۱۰", "email": "hello@vista-group.co", "project": "برج باغ نور", "stage": "مذاکره", "value": "۲۴۰ میلیارد", "lastContact": "شنبه، ۱۲:۰۰", "nextAction": "جلسه بررسی مدل مالی", "owner": "کیارش کیانی", "source": "همکار تجاری", "city": "تهران", "note": "برای مشارکت در ساخت و مدل درآمدی ترکیبی مذاکره می‌کند." },
+    { "id": "CUS-1008", "name": "مهسا شریفی", "initials": "م ش", "phone": "۰۹۱۲ ۶۹۰ ۳۳۰۸", "email": "mahsasharifi@gmail.com", "project": "آپارتمان مرداویج", "stage": "قرارداد", "value": "۱۸ میلیارد", "lastContact": "۵ روز پیش", "nextAction": "دریافت پیش‌پرداخت", "owner": "میلاد رستمی", "source": "مشتری پیشین", "city": "اصفهان", "note": "قرارداد امضا شده و پرونده آماده ورود به فاز طراحی است." }
+  ],
+  "projects": [
+    { "id": "PRJ-1405-12", "name": "رزیدنس چهارباغ", "type": "مسکونی لوکس", "client": "آرمان نیک‌فر", "status": "طبق برنامه", "progress": 72, "budget": "۸۶ میلیارد", "spent": "۵۹.۴ میلیارد", "manager": "مهندس زمانی", "team": ["ز م", "ن ر", "پ ک"], "phase": "نازک‌کاری داخلی", "deadline": "۲۸ آذر ۱۴۰۵", "nextMilestone": "تکمیل زیرسازی نما", "daysLeft": 110, "color": "copper" },
+    { "id": "PRJ-1405-09", "name": "مجموعه اداری صفه", "type": "اداری و تجاری", "client": "توسعه سپاهان", "status": "نیازمند توجه", "progress": 48, "budget": "۲۴۰ میلیارد", "spent": "۱۰۸.۲ میلیارد", "manager": "مهندس کریمی", "team": ["م ک", "س ح", "ا ع"], "phase": "سازه و تأسیسات", "deadline": "۱۵ خرداد ۱۴۰۶", "nextMilestone": "تأیید نقشه‌های مکانیک", "daysLeft": 289, "color": "ink" },
+    { "id": "PRJ-1404-24", "name": "خانه تاریخی جلفا", "type": "مرمت و بازآفرینی", "client": "خانواده رستگار", "status": "جلوتر از برنامه", "progress": 89, "budget": "۴۶ میلیارد", "spent": "۴۰.۱ میلیارد", "manager": "پگاه کریمی", "team": ["پ ک", "ع ن", "ر م"], "phase": "تحویل و رفع نقص", "deadline": "۲۲ مهر ۱۴۰۵", "nextMilestone": "بازدید نهایی میراث", "daysLeft": 44, "color": "green" },
+    { "id": "PRJ-1405-16", "name": "ویلای باغ‌بهادران", "type": "ویلایی", "client": "کیوان پارسامنش", "status": "طبق برنامه", "progress": 31, "budget": "۳۲ میلیارد", "spent": "۸.۸ میلیارد", "manager": "نیما رضایی", "team": ["ن ر", "م ص", "ا ی"], "phase": "سفت‌کاری", "deadline": "۳۰ فروردین ۱۴۰۶", "nextMilestone": "اتمام سقف طبقه دوم", "daysLeft": 233, "color": "sand" },
+    { "id": "PRJ-1405-18", "name": "دفتر مرکزی ویستا", "type": "بازطراحی اداری", "client": "گروه ویستا", "status": "در شروع", "progress": 12, "budget": "۲۱ میلیارد", "spent": "۱.۹ میلیارد", "manager": "سارا حیدری", "team": ["س ح", "پ ک", "م ص"], "phase": "طراحی تفصیلی", "deadline": "۲۰ بهمن ۱۴۰۵", "nextMilestone": "تأیید پالت متریال", "daysLeft": 164, "color": "blue" }
+  ],
+  "inventory": [
+    { "id": "MAT-0128", "name": "سنگ تراورتن عباس‌آباد", "category": "سنگ و نما", "stock": 2480, "unit": "مترمربع", "minimum": 900, "location": "انبار مرکزی", "reserved": 780, "unitPrice": "۱.۸ میلیون", "supplier": "سنگ آریا", "lastMove": "ورود ۳۲۰ متر · امروز" },
+    { "id": "MAT-0184", "name": "پروفیل ۴۰×۸۰", "category": "فلزات", "stock": 186, "unit": "شاخه", "minimum": 220, "location": "کارگاه صفه", "reserved": 140, "unitPrice": "۴.۲ میلیون", "supplier": "فولاد سپاهان", "lastMove": "خروج ۲۴ شاخه · ۱ ساعت پیش" },
+    { "id": "MAT-0221", "name": "چسب اپوکسی سنگ", "category": "مواد مصرفی", "stock": 38, "unit": "سطل", "minimum": 45, "location": "کارگاه چهارباغ", "reserved": 20, "unitPrice": "۳.۶ میلیون", "supplier": "شیمی ساختمان", "lastMove": "خروج ۶ سطل · دیروز" },
+    { "id": "MAT-0172", "name": "کابل برق ۴×۱۰", "category": "تأسیسات", "stock": 920, "unit": "متر", "minimum": 400, "location": "انبار مرکزی", "reserved": 310, "unitPrice": "۲۸۰ هزار", "supplier": "کابل افق", "lastMove": "ورود ۵۰۰ متر · ۲ روز پیش" },
+    { "id": "MAT-0204", "name": "گچ پلیمری سفید", "category": "مصالح پایه", "stock": 340, "unit": "کیسه", "minimum": 180, "location": "کارگاه چهارباغ", "reserved": 110, "unitPrice": "۴۸۰ هزار", "supplier": "سپیدگچ", "lastMove": "خروج ۴۰ کیسه · امروز" },
+    { "id": "EQP-0041", "name": "داربست مدولار", "category": "تجهیزات", "stock": 128, "unit": "قاب", "minimum": 80, "location": "کارگاه صفه", "reserved": 92, "unitPrice": "۲.۱ میلیون", "supplier": "تجهیز بنا", "lastMove": "انتقال ۱۸ قاب · شنبه" }
+  ],
+  "transactions": [
+    { "id": "INV-1405-284", "title": "صورت‌وضعیت اجرای نما", "party": "آرمان نیک‌فر", "project": "رزیدنس چهارباغ", "amount": "۶.۸ میلیارد", "type": "دریافتی", "status": "سررسید امروز", "date": "۹ شهریور" },
+    { "id": "PAY-1405-191", "title": "خرید پروفیل سازه", "party": "فولاد سپاهان", "project": "مجموعه صفه", "amount": "۲.۴ میلیارد", "type": "پرداختی", "status": "در انتظار تأیید", "date": "۱۰ شهریور" },
+    { "id": "INV-1405-279", "title": "مرحله دوم طراحی", "party": "گروه ویستا", "project": "دفتر مرکزی ویستا", "amount": "۱.۲ میلیارد", "type": "دریافتی", "status": "پرداخت شده", "date": "۸ شهریور" },
+    { "id": "PAY-1405-187", "title": "دستمزد تیم مرمت", "party": "گروه مرمت نقش", "project": "خانه تاریخی جلفا", "amount": "۹۸۰ میلیون", "type": "پرداختی", "status": "پرداخت شده", "date": "۷ شهریور" },
+    { "id": "INV-1405-271", "title": "پیش‌پرداخت اجرای سازه", "party": "کیوان پارسامنش", "project": "ویلای باغ‌بهادران", "amount": "۴.۸ میلیارد", "type": "دریافتی", "status": "معوق", "date": "۳ شهریور" },
+    { "id": "PAY-1405-180", "title": "خرید تجهیزات مکانیکی", "party": "تهویه دقیق", "project": "مجموعه صفه", "amount": "۳.۱ میلیارد", "type": "پرداختی", "status": "برنامه‌ریزی شده", "date": "۱۳ شهریور" }
+  ],
+  "employees": [
+    { "id": "EMP-021", "name": "زانیار موسوی", "initials": "ز م", "role": "مدیر پروژه", "department": "عملیات", "phone": "۰۹۱۳ ۲۱۰ ۴۸۹۰", "email": "z.mousavi@kenza.ir", "status": "حاضر", "checkIn": "۰۸:۰۳", "workload": 82, "performance": 94, "projects": 3, "today": "بازدید رزیدنس چهارباغ", "joined": "مهر ۱۴۰۱" },
+    { "id": "EMP-034", "name": "پگاه کریمی", "initials": "پ ک", "role": "معمار ارشد", "department": "طراحی", "phone": "۰۹۱۳ ۶۰۴ ۲۲۱۷", "email": "p.karimi@kenza.ir", "status": "دورکار", "checkIn": "۰۸:۴۵", "workload": 68, "performance": 91, "projects": 4, "today": "جلسه متریال ویستا", "joined": "تیر ۱۴۰۲" },
+    { "id": "EMP-018", "name": "میلاد رستمی", "initials": "م ر", "role": "کارشناس فروش", "department": "توسعه کسب‌وکار", "phone": "۰۹۱۲ ۸۴۰ ۱۱۲۵", "email": "m.rostami@kenza.ir", "status": "حاضر", "checkIn": "۰۷:۵۶", "workload": 74, "performance": 88, "projects": 2, "today": "پیگیری شرکت توسعه سپاهان", "joined": "آبان ۱۴۰۰" },
+    { "id": "EMP-027", "name": "سارا حیدری", "initials": "س ح", "role": "مهندس تأسیسات", "department": "فنی", "phone": "۰۹۱۳ ۳۵۵ ۹۰۱۴", "email": "s.heydari@kenza.ir", "status": "مأموریت", "checkIn": "۰۷:۳۰", "workload": 91, "performance": 96, "projects": 3, "today": "کنترل تأسیسات پروژه صفه", "joined": "اسفند ۱۴۰۱" },
+    { "id": "EMP-041", "name": "الهام یوسفی", "initials": "ا ی", "role": "حسابدار پروژه", "department": "مالی", "phone": "۰۹۱۳ ۷۸۴ ۱۰۲۲", "email": "e.yousefi@kenza.ir", "status": "مرخصی", "checkIn": "—", "workload": 55, "performance": 89, "projects": 5, "today": "مرخصی روزانه", "joined": "شهریور ۱۴۰۳" },
+    { "id": "EMP-012", "name": "امیر عطایی", "initials": "ا ع", "role": "مسئول انبار", "department": "تأمین", "phone": "۰۹۱۳ ۴۹۰ ۷۸۸۱", "email": "a.ataei@kenza.ir", "status": "حاضر", "checkIn": "۰۷:۴۱", "workload": 77, "performance": 86, "projects": 2, "today": "تحویل محموله سنگ", "joined": "دی ۱۳۹۹" }
+  ],
+  "missions": [
+    { "id": "MIS-328", "title": "بازدید پیش از تحویل واحد نمونه", "assignee": "زانیار موسوی", "initials": "ز م", "client": "آرمان نیک‌فر", "project": "رزیدنس چهارباغ", "time": "۰۹:۳۰ تا ۱۱:۰۰", "location": "چهارباغ بالا، کارگاه پروژه", "type": "بازدید مشتری", "status": "در حال انجام", "priority": "بالا", "note": "کنترل چک‌لیست نازک‌کاری و ثبت موارد اصلاحی کارفرما." },
+    { "id": "MIS-331", "title": "کنترل مسیرهای تأسیسات مکانیکی", "assignee": "سارا حیدری", "initials": "س ح", "client": "شرکت توسعه سپاهان", "project": "مجموعه اداری صفه", "time": "۱۱:۳۰ تا ۱۳:۰۰", "location": "بلوار صفه، کارگاه مرکزی", "type": "بازدید فنی", "status": "برنامه‌ریزی شده", "priority": "فوری", "note": "مغایرت‌های نقشه اجرایی با رایزر طبقه سوم بررسی شود." },
+    { "id": "MIS-335", "title": "جلسه انتخاب متریال فضای مدیریت", "assignee": "پگاه کریمی", "initials": "پ ک", "client": "گروه سرمایه‌گذاری ویستا", "project": "دفتر مرکزی ویستا", "time": "۱۴:۰۰ تا ۱۵:۳۰", "location": "شوروم مرکزی کنزا", "type": "جلسه مشتری", "status": "برنامه‌ریزی شده", "priority": "متوسط", "note": "سه پالت پیشنهادی به‌همراه برآورد قیمت آماده ارائه است." },
+    { "id": "MIS-319", "title": "تحویل و شمارش محموله سنگ نما", "assignee": "امیر عطایی", "initials": "ا ع", "client": "سنگ آریا", "project": "رزیدنس چهارباغ", "time": "۰۷:۳۰ تا ۰۸:۴۵", "location": "انبار مرکزی", "type": "تحویل کالا", "status": "انجام شده", "priority": "متوسط", "note": "۳۲۰ متر سنگ درجه یک تحویل و در قفسه A3 ثبت شد." },
+    { "id": "MIS-337", "title": "پیگیری امضای الحاقیه قرارداد", "assignee": "میلاد رستمی", "initials": "م ر", "client": "خانواده رستگار", "project": "خانه تاریخی جلفا", "time": "۱۶:۰۰ تا ۱۶:۳۰", "location": "تماس تلفنی", "type": "پیگیری", "status": "برنامه‌ریزی شده", "priority": "بالا", "note": "بندهای مربوط به نگهداری شش‌ماهه برای کارفرما توضیح داده شود." }
+  ],
+  "team": [
+    { "id": "USR-001", "name": "کیارش کیانی", "initials": "ک ک", "role": "مدیر ارشد", "department": "مدیریت", "accessLevel": "دسترسی کامل", "online": true, "lastActive": "همین حالا", "permissions": ["مشتریان", "پروژه‌ها", "انبار", "حسابداری", "کارمندان", "مأموریت‌ها", "تنظیمات"] },
+    { "id": "USR-014", "name": "الهام یوسفی", "initials": "ا ی", "role": "حسابدار", "department": "مالی", "accessLevel": "دسترسی مالی", "online": true, "lastActive": "۵ دقیقه پیش", "permissions": ["حسابداری", "گزارش مالی", "مشاهده پروژه‌ها"] },
+    { "id": "USR-009", "name": "زانیار موسوی", "initials": "ز م", "role": "مدیر پروژه", "department": "عملیات", "accessLevel": "مدیریت پروژه", "online": true, "lastActive": "۱۲ دقیقه پیش", "permissions": ["پروژه‌ها", "مأموریت‌ها", "انبار", "مشاهده مشتریان"] },
+    { "id": "USR-018", "name": "امیر عطایی", "initials": "ا ع", "role": "مسئول انبار", "department": "تأمین", "accessLevel": "اپراتور انبار", "online": false, "lastActive": "امروز، ۰۸:۴۰", "permissions": ["انبار", "ثبت ورود و خروج", "مشاهده پروژه‌ها"] },
+    { "id": "USR-021", "name": "شادی بهرامی", "initials": "ش ب", "role": "کارشناس CRM", "department": "فروش", "accessLevel": "مدیریت مشتری", "online": false, "lastActive": "دیروز، ۱۷:۵۵", "permissions": ["مشتریان", "مأموریت‌ها", "مشاهده قراردادها"] },
+    { "id": "USR-026", "name": "پگاه کریمی", "initials": "پ ک", "role": "معمار ارشد", "department": "طراحی", "accessLevel": "همکار پروژه", "online": true, "lastActive": "۲۸ دقیقه پیش", "permissions": ["پروژه‌ها", "مأموریت‌ها", "بارگذاری اسناد"] }
+  ]
+}
