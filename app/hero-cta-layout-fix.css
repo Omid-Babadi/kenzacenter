@@ -1,0 +1,13 @@
+/* The copy paragraph is positioned inside the copy stack; include that stack offset for the CTA row. */
+@media (max-width: 760px) {
+  .p-hero-card {
+    --hero-copy-stack-top: 13svh;
+  }
+
+  .p-hero-actions {
+    top: min(
+      calc(var(--hero-copy-stack-top) + var(--hero-copy-paragraph-top) + var(--hero-actions-gap)),
+      calc(100svh - 76px)
+    );
+  }
+}

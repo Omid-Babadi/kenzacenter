@@ -1,0 +1,23 @@
+/* Desktop navigation is persistent; only narrow screens use the slide-out drawer. */
+@media (min-width: 821px) {
+  .ad-shell { --ad-sidebar-width: 270px; }
+
+  .ad-sidebar {
+    inset: 0 0 0 auto;
+    width: var(--ad-sidebar-width);
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .ad-main {
+    width: calc(100% - var(--ad-sidebar-width));
+    margin-right: var(--ad-sidebar-width);
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1180px) {
+  .ad-shell { --ad-sidebar-width: 230px; }
+}

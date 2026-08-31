@@ -5,6 +5,7 @@ import "./admin-extra.css";
 import "./admin-charts.css";
 import "./admin-geometry.css";
 import "./admin-mobile-fix.css";
+import "./admin-sidebar-visibility.css";
 
 export const metadata: Metadata = {
   title: "پنل دمو",
