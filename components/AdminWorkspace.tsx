@@ -4,6 +4,7 @@ import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import demo from "@/data/admin-demo.json";
 import { AdminIcon } from "./AdminDashboard";
 import { AdminModernCharts } from "./AdminModernCharts";
+import { AdminLivePulse } from "./AdminLivePulse";
 
 export type WorkspaceId = "customers" | "projects" | "inventory" | "accounting" | "employees" | "missions" | "team";
 type PageId = "overview" | WorkspaceId;
@@ -71,8 +72,9 @@ function Overview({ navigate, notify }: { navigate: Props["onNavigate"]; notify:
   return <>
     <PageHeader eyebrow="مرکز فرماندهی امروز" title="صبح بخیر، مهندس کیانی 👋" description="وضعیت کسب‌وکار آرام است؛ دو موضوع مهم در تأمین و یک سررسید مالی برای تصمیم شما باقی مانده." action="برنامه مأموریت‌ها" icon="route" onAction={() => navigate("missions")} secondary={<button className="ka-secondary" onClick={() => notify("خلاصه مدیریتی دمو آماده شد.")}><WIcon name="download" />خروجی گزارش روزانه</button>} />
     <section className="ka-hero-command">
+      <div className="ka-hero-geometry" aria-hidden="true"><i /><i /><i /><i /><i /></div>
       <div className="ka-hero-copy"><span>شاخص سلامت مجموعه</span><h2>۸۷<small>٪</small></h2><strong><i />۴ درصد بهتر از هفته پیش</strong><p>چهار پروژه از پنج پروژه در محدوده کنترل هستند. تنها پروژه صفه نیاز به تصمیم فنی دارد.</p><button onClick={() => navigate("projects")}>مشاهده پالس پروژه‌ها <WIcon name="arrow" /></button></div>
-      <div className="ka-hero-orbit"><span className="ka-orbit one" /><span className="ka-orbit two" /><span className="ka-orbit-core"><WIcon name="activity" /><b>LIVE</b></span><i className="ka-orbit-dot dot-a" /><i className="ka-orbit-dot dot-b" /></div>
+      <AdminLivePulse />
       <div className="ka-hero-side"><article><span>فرصت‌های فروش</span><strong>۲۴۶ <small>میلیارد</small></strong><b>۶ پرونده فعال</b></article><article><span>مأموریت‌های امروز</span><strong>۵ <small>برنامه</small></strong><b>۱ مورد در حال انجام</b></article><article><span>مانده قابل تخصیص</span><strong>۳۸.۴ <small>میلیارد</small></strong><b>پایدار</b></article></div>
     </section>
     <div className="ka-stat-grid"><StatCard label="مشتریان فعال" value="۴۸" note="۶ سرنخ تازه در شهریور" icon="users" trend="+۱۲٪" /><StatCard label="پروژه‌های در اجرا" value="۵" note="میانگین پیشرفت ۵۰.۴٪" icon="briefcase" tone="ink" /><StatCard label="ارزش موجودی" value="۱۸.۲ میلیارد" note="۲ قلم زیر نقطه سفارش" icon="box" tone="blue" /><StatCard label="مطالبات این ماه" value="۱۲.۸ میلیارد" note="۴.۸ میلیارد معوق" icon="wallet" tone="green" /></div>

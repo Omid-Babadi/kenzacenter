@@ -1,0 +1,257 @@
+/* A richer architectural grid system for landing sections and cards. */
+.premium-page {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(23, 24, 19, .018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 24, 19, .018) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.p-hero-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(39vw, 560px);
+  aspect-ratio: 1;
+  right: -12%;
+  top: -18%;
+  background:
+    linear-gradient(rgba(166, 111, 67, .12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(166, 111, 67, .12) 1px, transparent 1px);
+  background-size: 31px 31px;
+  border: 1px solid rgba(166, 111, 67, .12);
+  transform: rotate(13deg);
+  -webkit-mask-image: radial-gradient(circle, #000, transparent 72%);
+  mask-image: radial-gradient(circle, #000, transparent 72%);
+  animation: p-square-field-drift 18s ease-in-out infinite alternate;
+}
+
+.p-value-grid,
+.p-number-grid {
+  position: relative;
+}
+
+.p-value-grid::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 230px;
+  height: 155px;
+  top: -58px;
+  left: -48px;
+  background:
+    linear-gradient(rgba(166, 111, 67, .11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(166, 111, 67, .11) 1px, transparent 1px);
+  background-size: 23px 23px;
+  transform: rotate(-7deg);
+  -webkit-mask-image: linear-gradient(135deg, #000, transparent 72%);
+  mask-image: linear-gradient(135deg, #000, transparent 72%);
+}
+
+.p-value-grid article,
+.p-number-grid article,
+.p-process-grid li,
+.p-contact-form,
+.p-form-success {
+  background-image:
+    linear-gradient(rgba(23, 24, 19, .032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 24, 19, .032) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+.p-value-grid article,
+.p-number-grid article,
+.p-process-grid li,
+.p-contact-form,
+.p-form-success {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.p-value-grid article::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 10px;
+  height: 10px;
+  top: 17px;
+  left: 17px;
+  background: rgba(166, 111, 67, .13);
+  border: 1px solid rgba(166, 111, 67, .16);
+  box-shadow: 14px 0 0 rgba(23, 24, 19, .045), 14px 14px 0 rgba(166, 111, 67, .08), 28px 14px 0 rgba(23, 24, 19, .035);
+}
+
+.p-service-card {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .033) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .033) 1px, transparent 1px);
+  background-size: 27px 27px;
+}
+
+.p-service-card:nth-child(3n + 2) {
+  background-image:
+    linear-gradient(45deg, rgba(210, 163, 116, .055) 25%, transparent 25% 75%, rgba(210, 163, 116, .055) 75%),
+    linear-gradient(45deg, rgba(210, 163, 116, .055) 25%, transparent 25% 75%, rgba(210, 163, 116, .055) 75%);
+  background-position: 0 0, 13px 13px;
+  background-size: 26px 26px;
+}
+
+.p-service-card:hover {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .055) 1px, transparent 1px);
+  background-size: 27px 27px;
+}
+
+.p-service-card:nth-child(3n + 2):hover {
+  background-image:
+    linear-gradient(45deg, rgba(210, 163, 116, .08) 25%, transparent 25% 75%, rgba(210, 163, 116, .08) 75%),
+    linear-gradient(45deg, rgba(210, 163, 116, .08) 25%, transparent 25% 75%, rgba(210, 163, 116, .08) 75%);
+}
+
+.p-gallery-card::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 13px;
+  border: 1px solid rgba(247, 245, 239, .24);
+  border-radius: 23px;
+  pointer-events: none;
+  -webkit-mask-image:
+    linear-gradient(90deg, #000 0 13%, transparent 13% 87%, #000 87%),
+    linear-gradient(#000 0 17%, transparent 17% 83%, #000 83%);
+  mask-image:
+    linear-gradient(90deg, #000 0 13%, transparent 13% 87%, #000 87%),
+    linear-gradient(#000 0 17%, transparent 17% 83%, #000 83%);
+  mask-composite: intersect;
+}
+
+.p-founder-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: min(45vw, 650px);
+  height: min(45vw, 650px);
+  right: -9%;
+  top: -18%;
+  background:
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: 34px 34px;
+  border: 1px solid rgba(210, 163, 116, .13);
+  transform: rotate(11deg);
+  -webkit-mask-image: radial-gradient(circle, #000, transparent 72%);
+  mask-image: radial-gradient(circle, #000, transparent 72%);
+}
+
+.p-number-grid article::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 110px;
+  height: 110px;
+  top: -64px;
+  left: -58px;
+  border: 1px solid rgba(23, 24, 19, .1);
+  box-shadow: 0 0 0 22px rgba(23, 24, 19, .02);
+  transform: rotate(45deg);
+}
+
+.p-number-grid article:nth-child(even)::before {
+  border-color: rgba(166, 111, 67, .16);
+  box-shadow: 0 0 0 22px rgba(166, 111, 67, .025);
+}
+
+.p-number-grid article::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: 22px;
+  bottom: 22px;
+  width: 7px;
+  height: 7px;
+  background: rgba(23, 24, 19, .16);
+  box-shadow: 11px 0 0 rgba(23, 24, 19, .07), 0 -11px 0 rgba(166, 111, 67, .15);
+}
+
+.p-process-shell {
+  background:
+    linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(166, 111, 67, .13), transparent 38%),
+    #24251f;
+  background-size: 32px 32px, 32px 32px, auto, auto;
+}
+
+.p-process-grid li {
+  background-color: rgba(255, 255, 255, .04);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .03) 1px, transparent 1px);
+  border-color: rgba(255, 255, 255, .09);
+}
+
+.p-process-grid li::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 68px;
+  height: 68px;
+  left: -36px;
+  bottom: -36px;
+  border: 1px solid rgba(210, 163, 116, .18);
+  transform: rotate(45deg);
+}
+
+.p-contact-form::before,
+.p-form-success::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 190px;
+  height: 190px;
+  left: -70px;
+  top: -72px;
+  background:
+    linear-gradient(rgba(166, 111, 67, .075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(166, 111, 67, .075) 1px, transparent 1px);
+  background-size: 20px 20px;
+  transform: rotate(13deg);
+  -webkit-mask-image: radial-gradient(circle, #000, transparent 72%);
+  mask-image: radial-gradient(circle, #000, transparent 72%);
+}
+
+.p-contact-form::after,
+.p-form-success::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 92px;
+  height: 92px;
+  right: -54px;
+  bottom: -52px;
+  border: 1px solid rgba(23, 24, 19, .09);
+  box-shadow: 0 0 0 18px rgba(23, 24, 19, .018);
+  transform: rotate(45deg);
+}
+
+@keyframes p-square-field-drift {
+  to { transform: translate3d(-22px, 16px, 0) rotate(18deg); }
+}
+
+@media (max-width: 760px) {
+  .premium-page { background-size: 42px 42px; }
+  .p-hero-card::before { width: 360px; right: -47%; top: -4%; background-size: 24px 24px; }
+  .p-value-grid::before { width: 160px; height: 120px; top: -32px; left: -60px; }
+  .p-founder-card::before { width: 360px; height: 360px; right: -48%; top: -6%; background-size: 27px 27px; }
+  .p-gallery-card::before { inset: 10px; border-radius: 19px; }
+  .p-service-card,
+  .p-value-grid article,
+  .p-number-grid article,
+  .p-process-grid li { background-size: 22px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-hero-card::before { animation: none; }
+}

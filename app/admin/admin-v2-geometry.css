@@ -1,0 +1,431 @@
+/* Architectural geometry, patterned cards, and the live command-center pulse. */
+.ka-hero-command {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(rgba(255, 255, 255, .034) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .034) 1px, transparent 1px),
+    radial-gradient(circle at 70% 20%, rgba(206, 145, 90, .27), transparent 27%),
+    linear-gradient(120deg, #20221d, #30362f 62%, #4c3b2f);
+  background-size: 30px 30px, 30px 30px, auto, auto;
+  animation: ka-command-grid-drift 24s linear infinite;
+}
+
+.ka-hero-command::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: min(35vw, 480px);
+  aspect-ratio: 1;
+  top: -72%;
+  left: 31%;
+  border: 1px solid rgba(255, 255, 255, .11);
+  box-shadow:
+    0 0 0 38px rgba(255, 255, 255, .018),
+    0 0 0 76px rgba(218, 162, 112, .018);
+  transform: rotate(45deg);
+  animation: ka-command-square-float 14s ease-in-out infinite alternate;
+}
+
+.ka-hero-command::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 210px;
+  height: 210px;
+  right: -115px;
+  bottom: -125px;
+  background:
+    linear-gradient(135deg, transparent 48.8%, rgba(218, 162, 112, .18) 49.2%, rgba(218, 162, 112, .18) 50.8%, transparent 51.2%);
+  border: 1px solid rgba(255, 255, 255, .09);
+  transform: rotate(45deg);
+}
+
+.ka-hero-command > :not(.ka-hero-geometry) {
+  position: relative;
+  z-index: 2;
+}
+
+.ka-hero-geometry {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ka-hero-geometry i {
+  position: absolute;
+  display: block;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  transform: rotate(45deg);
+}
+
+.ka-hero-geometry i:nth-child(1) {
+  top: 13%;
+  right: 3.5%;
+  background: rgba(218, 162, 112, .55);
+  box-shadow: 18px 18px 0 rgba(255, 255, 255, .12), 36px 36px 0 rgba(218, 162, 112, .16);
+  animation: ka-geo-blink 4.8s ease-in-out infinite;
+}
+
+.ka-hero-geometry i:nth-child(2) {
+  width: 38px;
+  height: 38px;
+  left: 2.5%;
+  top: 12%;
+  border-color: rgba(255, 255, 255, .08);
+  animation: ka-geo-turn 18s linear infinite;
+}
+
+.ka-hero-geometry i:nth-child(3) {
+  width: 13px;
+  height: 13px;
+  left: 31%;
+  bottom: 9%;
+  background: rgba(255, 255, 255, .055);
+  border-color: rgba(218, 162, 112, .32);
+  animation: ka-geo-float 6s ease-in-out infinite alternate;
+}
+
+.ka-hero-geometry i:nth-child(4) {
+  width: 72px;
+  height: 1px;
+  right: 29%;
+  bottom: 12%;
+  background: linear-gradient(90deg, transparent, rgba(218, 162, 112, .55), transparent);
+  border: 0;
+  transform: none;
+}
+
+.ka-hero-geometry i:nth-child(5) {
+  width: 6px;
+  height: 6px;
+  right: 35%;
+  bottom: calc(12% - 2px);
+  background: #dba271;
+  border: 0;
+  box-shadow: 0 0 0 5px rgba(219, 162, 113, .09);
+  animation: ka-geo-line-run 4.5s ease-in-out infinite;
+}
+
+/* Live multi-layer telemetry animation. */
+.ka-live-orbit {
+  isolation: isolate;
+  filter: drop-shadow(0 18px 28px rgba(9, 11, 8, .13));
+}
+
+.ka-live-orbit::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: -8%;
+  background:
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: 18px 18px;
+  border-radius: 50%;
+  opacity: .55;
+  -webkit-mask-image: radial-gradient(circle, #000 0 62%, transparent 72%);
+  mask-image: radial-gradient(circle, #000 0 62%, transparent 72%);
+  animation: ka-live-grid-breathe 5s ease-in-out infinite;
+}
+
+.ka-orbit {
+  z-index: 1;
+  box-shadow: inset 0 0 28px rgba(255, 255, 255, .015);
+}
+
+.ka-orbit::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  background: #f5f4ee;
+  border: 2px solid rgba(44, 47, 40, .9);
+  border-radius: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, .06), 0 0 16px rgba(255, 255, 255, .22);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.ka-orbit.two::before {
+  width: 6px;
+  height: 6px;
+  background: #d99d69;
+  border-color: #3b382f;
+  box-shadow: 0 0 0 5px rgba(217, 157, 105, .08), 0 0 15px rgba(217, 157, 105, .2);
+}
+
+.ka-orbit.three {
+  inset: 29%;
+  border-color: rgba(255, 255, 255, .1);
+  border-style: dashed;
+  animation-duration: 7s;
+}
+
+.ka-orbit.three::before {
+  top: auto;
+  right: -3px;
+  bottom: 30%;
+  left: auto;
+  width: 4px;
+  height: 4px;
+  background: #94c3ad;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(148, 195, 173, .09), 0 0 12px rgba(148, 195, 173, .28);
+}
+
+.ka-live-radar {
+  position: absolute;
+  z-index: 0;
+  inset: 3%;
+  background: conic-gradient(from 0deg, transparent 0 75%, rgba(218, 162, 112, .16) 91%, transparent 100%);
+  border-radius: 50%;
+  -webkit-mask-image: radial-gradient(circle, transparent 0 19%, #000 20% 68%, transparent 70%);
+  mask-image: radial-gradient(circle, transparent 0 19%, #000 20% 68%, transparent 70%);
+  animation: ka-live-radar 5.7s linear infinite;
+}
+
+.ka-live-axis {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 6%;
+  width: 88%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent);
+}
+
+.ka-live-axis.is-vertical { transform: rotate(90deg); }
+
+.ka-live-trace {
+  position: absolute;
+  z-index: 2;
+  right: 9%;
+  bottom: 7%;
+  width: 82%;
+  height: 25%;
+  overflow: visible;
+  opacity: .72;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16% 84%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 16% 84%, transparent);
+}
+
+.ka-live-trace-guide {
+  fill: none;
+  stroke: rgba(255, 255, 255, .09);
+  stroke-dasharray: 3 6;
+}
+
+.ka-live-trace-line {
+  fill: none;
+  stroke: #dda875;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 220;
+  filter: drop-shadow(0 0 4px rgba(221, 168, 117, .42));
+  animation: ka-live-trace 3.1s linear infinite;
+}
+
+.ka-live-orbit .ka-orbit-core {
+  z-index: 5;
+  overflow: visible;
+  box-shadow: 0 0 0 13px rgba(210, 151, 98, .07), 0 14px 35px rgba(5, 7, 4, .18);
+  animation: ka-live-core-float 3.4s ease-in-out infinite;
+}
+
+.ka-live-orbit .ka-orbit-core::before,
+.ka-live-orbit .ka-orbit-core::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -8px;
+  border: 1px solid rgba(221, 168, 117, .32);
+  border-radius: 50%;
+  animation: ka-live-pulse 2.8s ease-out infinite;
+}
+
+.ka-live-orbit .ka-orbit-core::after { animation-delay: 1.4s; }
+.ka-live-orbit .ka-orbit-core svg { animation: ka-live-heartbeat 1.75s ease-in-out infinite; }
+
+.ka-live-orbit .ka-orbit-core b {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ka-live-orbit .ka-orbit-core b::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background: #245b49;
+  border-radius: 50%;
+  animation: ka-geo-blink 1.2s ease-in-out infinite;
+}
+
+.ka-live-orbit .dot-a { animation: ka-dot-pulse 2.3s ease-in-out infinite; }
+.ka-live-orbit .dot-b { animation: ka-dot-pulse 2.3s ease-in-out .75s infinite; }
+.ka-live-orbit .dot-c {
+  top: 46%;
+  left: 17%;
+  width: 6px;
+  height: 6px;
+  background: #8dc0a8;
+  box-shadow: 0 0 0 5px rgba(141, 192, 168, .07);
+  animation: ka-dot-pulse 2.3s ease-in-out 1.4s infinite;
+}
+
+.ka-live-readout {
+  position: absolute;
+  z-index: 6;
+  right: 50%;
+  bottom: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  color: rgba(255, 255, 255, .52);
+  background: rgba(20, 22, 18, .68);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 7px;
+  font-size: .4rem;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  transform: translateX(50%);
+}
+
+.ka-live-readout i {
+  width: 5px;
+  height: 5px;
+  background: #79bc9d;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(121, 188, 157, .08);
+}
+
+/* Patterned cards stay quiet enough for data-heavy surfaces. */
+.ka-stat,
+.ka-project-card,
+.ka-employee-card,
+.ka-team-card,
+.ka-data-panel,
+.ka-dashboard-grid > .ka-card,
+.ka-modern-analytics > .ka-card {
+  background-image:
+    linear-gradient(rgba(31, 32, 28, .026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 32, 28, .026) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.ka-stat,
+.ka-employee-card,
+.ka-team-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.ka-stat::before,
+.ka-employee-card:nth-child(3n + 2)::before,
+.ka-team-card:nth-child(3n + 1)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 54px;
+  height: 54px;
+  top: -29px;
+  left: -25px;
+  border: 1px solid rgba(187, 128, 80, .14);
+  box-shadow: 0 0 0 13px rgba(187, 128, 80, .025);
+  transform: rotate(45deg);
+}
+
+.ka-stat:nth-child(even)::before {
+  border-color: rgba(85, 115, 140, .14);
+  box-shadow: 0 0 0 13px rgba(85, 115, 140, .025);
+}
+
+.ka-modern-analytics > .ka-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  width: 138px;
+  height: 138px;
+  right: -42px;
+  bottom: -54px;
+  background:
+    linear-gradient(rgba(187, 128, 80, .08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(187, 128, 80, .08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  border: 1px solid rgba(187, 128, 80, .1);
+  transform: rotate(12deg);
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 72%);
+  mask-image: radial-gradient(circle at 50% 50%, #000, transparent 72%);
+}
+
+.ka-project-summary > div:first-child,
+.ka-team-summary,
+.ka-finance-hero {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@keyframes ka-command-grid-drift {
+  to { background-position: 30px 30px, 30px 30px, 0 0, 0 0; }
+}
+
+@keyframes ka-command-square-float {
+  to { transform: translate3d(-18px, 18px, 0) rotate(52deg); }
+}
+
+@keyframes ka-geo-turn { to { transform: rotate(405deg); } }
+@keyframes ka-geo-float { to { transform: translateY(-14px) rotate(70deg); opacity: .45; } }
+@keyframes ka-geo-blink { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes ka-geo-line-run { 0%, 100% { transform: translateX(0) rotate(45deg); opacity: .25; } 50% { transform: translateX(-64px) rotate(45deg); opacity: 1; } }
+@keyframes ka-live-grid-breathe { 0%, 100% { opacity: .28; transform: scale(.96); } 50% { opacity: .65; transform: scale(1.03); } }
+@keyframes ka-live-radar { to { transform: rotate(360deg); } }
+@keyframes ka-live-trace { from { stroke-dashoffset: 220; } to { stroke-dashoffset: -220; } }
+@keyframes ka-live-core-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes ka-live-pulse { 0% { opacity: .5; transform: scale(.82); } 78%, 100% { opacity: 0; transform: scale(1.65); } }
+@keyframes ka-live-heartbeat { 0%, 100% { transform: scale(1); } 8% { transform: scale(1.12); } 16% { transform: scale(.98); } 26% { transform: scale(1.08); } 38% { transform: scale(1); } }
+@keyframes ka-dot-pulse { 0%, 100% { transform: scale(.78); opacity: .4; } 50% { transform: scale(1.18); opacity: 1; } }
+
+@media (max-width: 980px) {
+  .ka-hero-command::before { width: 420px; top: -30%; left: 35%; }
+}
+
+@media (max-width: 570px) {
+  .ka-hero-command {
+    background-size: 24px 24px, 24px 24px, auto, auto;
+    animation-duration: 30s;
+  }
+
+  .ka-hero-command::before { width: 310px; top: 3%; left: 42%; }
+  .ka-hero-geometry i:nth-child(2),
+  .ka-hero-geometry i:nth-child(4),
+  .ka-hero-geometry i:nth-child(5) { display: none; }
+  .ka-live-readout { bottom: -5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ka-hero-command,
+  .ka-hero-command::before,
+  .ka-hero-geometry i,
+  .ka-live-orbit::before,
+  .ka-live-orbit .ka-orbit,
+  .ka-live-radar,
+  .ka-live-trace-line,
+  .ka-live-orbit .ka-orbit-core,
+  .ka-live-orbit .ka-orbit-core::before,
+  .ka-live-orbit .ka-orbit-core::after,
+  .ka-live-orbit .ka-orbit-core svg,
+  .ka-live-orbit .ka-orbit-dot { animation: none !important; }
+}

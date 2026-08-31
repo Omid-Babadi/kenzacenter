@@ -5,6 +5,7 @@ import { ModernHeader } from "@/components/ModernHeader";
 import { MotionManager } from "@/components/MotionManager";
 import "./premium.css";
 import "./landing-geometry.css";
+import "./landing-geometry-v2.css";
 import "./hero-mobile-fix.css";
 import "./hero-cta-layout-fix.css";
 
