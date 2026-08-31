@@ -194,7 +194,7 @@ export function AdminWorkspace({ active, query, onQuery, onNavigate }: Props) {
     if (active === "missions") return <Missions query={query} notify={notify} />;
     return <Team query={query} notify={notify} />;
   // The memo intentionally re-renders whenever global search or the active workspace changes.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [active, query, onQuery, onNavigate]);
   return <div className="ka-workspace-view">{panel}{notice && <div className={`ka-toast is-${notice.tone}`} role="status"><span><WIcon name="check" /></span><div><strong>{notice.tone === "success" ? "انجام شد" : "توجه"}</strong><p>{notice.text}</p></div></div>}</div>;
 }
