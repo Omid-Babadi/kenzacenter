@@ -5,6 +5,7 @@ import demo from "@/data/admin-demo.json";
 import { AdminIcon } from "./AdminDashboard";
 import { AdminModernCharts } from "./AdminModernCharts";
 import { AdminLivePulse } from "./AdminLivePulse";
+import { KenzaAssistant } from "./KenzaAssistant";
 
 export type WorkspaceId = "customers" | "projects" | "inventory" | "accounting" | "employees" | "missions" | "team";
 type PageId = "overview" | WorkspaceId;
@@ -77,6 +78,7 @@ function Overview({ navigate, notify }: { navigate: Props["onNavigate"]; notify:
       <AdminLivePulse />
       <div className="ka-hero-side"><article><span>فرصت‌های فروش</span><strong>۲۴۶ <small>میلیارد</small></strong><b>۶ پرونده فعال</b></article><article><span>مأموریت‌های امروز</span><strong>۵ <small>برنامه</small></strong><b>۱ مورد در حال انجام</b></article><article><span>مانده قابل تخصیص</span><strong>۳۸.۴ <small>میلیارد</small></strong><b>پایدار</b></article></div>
     </section>
+    <KenzaAssistant variant="admin" />
     <div className="ka-stat-grid"><StatCard label="مشتریان فعال" value="۴۸" note="۶ سرنخ تازه در شهریور" icon="users" trend="+۱۲٪" /><StatCard label="پروژه‌های در اجرا" value="۵" note="میانگین پیشرفت ۵۰.۴٪" icon="briefcase" tone="ink" /><StatCard label="ارزش موجودی" value="۱۸.۲ میلیارد" note="۲ قلم زیر نقطه سفارش" icon="box" tone="blue" /><StatCard label="مطالبات این ماه" value="۱۲.۸ میلیارد" note="۴.۸ میلیارد معوق" icon="wallet" tone="green" /></div>
     <AdminModernCharts />
     <section className="ka-dashboard-grid">

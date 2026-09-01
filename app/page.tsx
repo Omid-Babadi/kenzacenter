@@ -3,6 +3,7 @@ import { HeroExperience } from "@/components/HeroExperience";
 import { ModernContactForm } from "@/components/ModernContactForm";
 import { ModernHeader } from "@/components/ModernHeader";
 import { MotionManager } from "@/components/MotionManager";
+import { KenzaAssistant } from "@/components/KenzaAssistant";
 import "./premium.css";
 import "./landing-geometry.css";
 import "./landing-geometry-v2.css";
@@ -170,6 +171,7 @@ export default function Home() {
         <div className="p-footer-top"><div><strong>کنزا</strong><span lang="en">KENZA</span></div><p>طراحی، ساخت و توسعه<br />اصفهان / سراسر ایران</p></div>
         <div className="p-footer-bottom"><span>© ۱۴۰۵ کنزا — تمام حقوق محفوظ است.</span><a href="#top">بازگشت به بالا ↑</a></div>
       </footer>
+      <KenzaAssistant variant="landing" />
       <MotionManager />
     </div>
   );
