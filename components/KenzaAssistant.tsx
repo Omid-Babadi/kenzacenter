@@ -46,6 +46,43 @@ function CloseIcon() {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>;
 }
 
+function SupportIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 13v-1a8 8 0 0 1 16 0v1" />
+      <path d="M6.5 12H6a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h.5v-6Z" />
+      <path d="M17.5 12h.5a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.5v-6Z" />
+      <path d="M17.5 18c-.7 2-2.2 3-4.5 3h-1" />
+    </svg>
+  );
+}
+
+function playSupportChime(context: AudioContext) {
+  const startedAt = context.currentTime + 0.025;
+  const notes = [
+    { frequency: 659.25, delay: 0, duration: 0.22, volume: 0.025 },
+    { frequency: 987.77, delay: 0.085, duration: 0.3, volume: 0.018 },
+  ];
+
+  notes.forEach(({ frequency, delay, duration, volume }) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const noteStart = startedAt + delay;
+    const noteEnd = noteStart + duration;
+
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, noteStart);
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.012, noteEnd);
+    gain.gain.setValueAtTime(0.0001, noteStart);
+    gain.gain.exponentialRampToValueAtTime(volume, noteStart + 0.035);
+    gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(noteStart);
+    oscillator.stop(noteEnd + 0.02);
+  });
+}
+
 function ChatPanel({ variant, onClose }: { variant: AssistantVariant; onClose?: () => void }) {
   const text = copy[variant];
   const [messages, setMessages] = useState<ChatMessage[]>(() => [makeMessage("assistant", text.greeting)]);
@@ -166,6 +203,85 @@ function ChatPanel({ variant, onClose }: { variant: AssistantVariant; onClose?: 
 
 export function KenzaAssistant({ variant = "landing" }: { variant?: AssistantVariant }) {
   const [open, setOpen] = useState(false);
+  const [launcherVisible, setLauncherVisible] = useState(false);
+  const launcherVisibleRef = useRef(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const soundPlayedRef = useRef(false);
+
+  useEffect(() => {
+    if (variant !== "landing") return;
+
+    const AudioContextConstructor = window.AudioContext
+      ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+    const prepareAudio = () => {
+      if (!AudioContextConstructor) return;
+      const context = audioContextRef.current ?? new AudioContextConstructor();
+      audioContextRef.current = context;
+      if (context.state === "suspended") void context.resume().catch(() => undefined);
+    };
+
+    window.addEventListener("pointerdown", prepareAudio, { passive: true, once: true });
+    window.addEventListener("keydown", prepareAudio, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", prepareAudio);
+      window.removeEventListener("keydown", prepareAudio);
+      const context = audioContextRef.current;
+      if (context && context.state !== "closed") void context.close();
+      audioContextRef.current = null;
+    };
+  }, [variant]);
+
+  useEffect(() => {
+    if (variant !== "landing") return;
+
+    const hero = document.querySelector<HTMLElement>(".p-hero-scroll");
+    let initialCheck = true;
+    let animationFrame = 0;
+
+    const revealWithSound = async () => {
+      if (soundPlayedRef.current || document.visibilityState !== "visible") return;
+      const context = audioContextRef.current;
+      if (!context) return;
+
+      try {
+        if (context.state === "suspended") await context.resume();
+        if (context.state !== "running") return;
+        playSupportChime(context);
+        soundPlayedRef.current = true;
+      } catch {
+        // Browsers may keep audio locked until a click or key press.
+      }
+    };
+
+    const updateVisibility = () => {
+      animationFrame = 0;
+      const shouldShow = hero ? hero.getBoundingClientRect().bottom <= 0 : true;
+
+      if (shouldShow !== launcherVisibleRef.current) {
+        launcherVisibleRef.current = shouldShow;
+        setLauncherVisible(shouldShow);
+        if (!shouldShow) setOpen(false);
+        if (shouldShow && !initialCheck) void revealWithSound();
+      }
+      initialCheck = false;
+    };
+
+    const requestVisibilityUpdate = () => {
+      if (!animationFrame) animationFrame = window.requestAnimationFrame(updateVisibility);
+    };
+
+    requestVisibilityUpdate();
+    window.addEventListener("scroll", requestVisibilityUpdate, { passive: true });
+    window.addEventListener("resize", requestVisibilityUpdate, { passive: true });
+
+    return () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", requestVisibilityUpdate);
+      window.removeEventListener("resize", requestVisibilityUpdate);
+    };
+  }, [variant]);
 
   useEffect(() => {
     if (variant !== "landing" || !open) return;
@@ -193,12 +309,11 @@ export function KenzaAssistant({ variant = "landing" }: { variant?: AssistantVar
   }
 
   return (
-    <div className={styles.landingRoot} dir="rtl">
+    <div className={`${styles.landingRoot} ${launcherVisible ? styles.landingRootVisible : ""}`} dir="rtl" aria-hidden={!launcherVisible}>
       {open && <ChatPanel variant="landing" onClose={() => setOpen(false)} />}
-      {!open && <div className={styles.launchHint}><strong>یک سؤال دارید؟</strong><span>از دستیار کنزا بپرسید</span></div>}
-      <button type="button" className={`${styles.launcher} ${open ? styles.launcherOpen : ""}`} onClick={() => setOpen((current) => !current)} aria-label={open ? "بستن دستیار هوشمند" : "باز کردن دستیار هوشمند کنزا"} aria-expanded={open}>
+      <button type="button" className={`${styles.launcher} ${open ? styles.launcherOpen : ""}`} onClick={() => setOpen((current) => !current)} aria-label={open ? "بستن دستیار هوشمند" : "پشتیبانی و دستیار هوشمند کنزا"} aria-expanded={open} disabled={!launcherVisible}>
         <span className={styles.launcherRing} />
-        <span className={styles.launcherCore}>{open ? <CloseIcon /> : <SparkIcon />}</span>
+        <span className={styles.launcherCore}>{open ? <CloseIcon /> : <SupportIcon />}</span>
         {!open && <i className={styles.onlineDot} />}
       </button>
     </div>
